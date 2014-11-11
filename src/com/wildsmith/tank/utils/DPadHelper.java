@@ -7,19 +7,17 @@ import android.view.MotionEvent;
 
 public class DPadHelper {
 
-    final static int UP = 0;
+    public static final int UP = 0;
 
-    final static int LEFT = 1;
+    public static final int LEFT = 1;
 
-    final static int RIGHT = 2;
+    public static final int RIGHT = 2;
 
-    final static int DOWN = 3;
+    public static final int DOWN = 3;
 
-    final static int CENTER = 4;
+    public final static int CENTER = 4;
 
-    int directionPressed = -1; // initialized to -1
-
-    public int getDirectionPressed(InputEvent event) {
+    public static int getDirectionPressed(InputEvent event) {
         if (!isDPadHelperDevice(event)) {
             return -1;
         }
@@ -34,16 +32,16 @@ public class DPadHelper {
             // Check if the AXIS_HAT_X value is -1 or 1, and set the D-pad
             // LEFT and RIGHT direction accordingly.
             if (Float.compare(xaxis, -1.0f) == 0) {
-                directionPressed = DPadHelper.LEFT;
+                return KeyEvent.KEYCODE_DPAD_LEFT;
             } else if (Float.compare(xaxis, 1.0f) == 0) {
-                directionPressed = DPadHelper.RIGHT;
+                return KeyEvent.KEYCODE_DPAD_RIGHT;
             }
             // Check if the AXIS_HAT_Y value is -1 or 1, and set the D-pad
             // UP and DOWN direction accordingly.
             else if (Float.compare(yaxis, -1.0f) == 0) {
-                directionPressed = DPadHelper.UP;
+                return KeyEvent.KEYCODE_DPAD_UP;
             } else if (Float.compare(yaxis, 1.0f) == 0) {
-                directionPressed = DPadHelper.DOWN;
+                return KeyEvent.KEYCODE_DPAD_DOWN;
             }
         } else if (event instanceof KeyEvent) {
             // If the input event is a KeyEvent, check its key code.
@@ -51,19 +49,19 @@ public class DPadHelper {
             // Use the key code to find the D-pad direction.
             KeyEvent keyEvent = (KeyEvent) event;
             if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-                directionPressed = DPadHelper.LEFT;
+                return DPadHelper.LEFT;
             } else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-                directionPressed = DPadHelper.RIGHT;
+                return DPadHelper.RIGHT;
             } else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
-                directionPressed = DPadHelper.UP;
+                return DPadHelper.UP;
             } else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
-                directionPressed = DPadHelper.DOWN;
+                return DPadHelper.DOWN;
             } else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
-                directionPressed = DPadHelper.CENTER;
+                return DPadHelper.CENTER;
             }
         }
 
-        return directionPressed;
+        return -1;
     }
 
     public static boolean isDPadHelperDevice(InputEvent event) {

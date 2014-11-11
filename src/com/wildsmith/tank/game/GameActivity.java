@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -50,5 +52,27 @@ public class GameActivity extends Activity {
             GameView gameView = (GameView) findViewById(R.id.gameView);
             gameView.resumeGame();
         }
+    }
+
+    @Override
+    public boolean dispatchGenericMotionEvent(MotionEvent event) {
+        if (ScreenReceiver.wasScreenOn) {
+            // this is the case when onResume() is called by the system due to a screen state change
+            // to screen off stop the game thread and stop the sound
+            GameView gameView = (GameView) findViewById(R.id.gameView);
+            return gameView.handleMotionEvent(event);
+        }
+
+        return super.dispatchGenericMotionEvent(event);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (ScreenReceiver.wasScreenOn) {
+            GameView gameView = (GameView) findViewById(R.id.gameView);
+            return gameView.handleKeyEvent(event);
+        }
+
+        return super.dispatchKeyEvent(event);
     }
 }

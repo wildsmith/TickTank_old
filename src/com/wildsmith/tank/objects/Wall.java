@@ -1,19 +1,25 @@
 package com.wildsmith.tank.objects;
 
-import android.content.res.Resources;
-import android.graphics.Bitmap;
+import android.content.Context;
 import android.graphics.Canvas;
 
+import com.wildsmith.tank.R;
 import com.wildsmith.tank.attributes.SoundManager;
+import com.wildsmith.tank.controller.GamepadController;
 
 public class Wall extends ViewObject {
 
-    public Wall(Bitmap bitmap, Resources resources, SoundManager sound) {
-        super(bitmap, resources, sound);
+    public Wall(Context context, SoundManager sound, GamepadController gamepadController) {
+        super(context, R.drawable.wall, sound, gamepadController);
+    }
+
+    @Override
+    public void update(float frameDelta) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void draw(Canvas canvas) {
-        // TODO Auto-generated method stub
+        canvas.drawBitmap(bitmap, left, top, paint);
     }
 }

@@ -2,21 +2,21 @@ package com.wildsmith.tank.game;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.view.InputDevice;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.wildsmith.tank.R;
 import com.wildsmith.tank.attributes.SoundManager;
+import com.wildsmith.tank.controller.GamepadController;
 import com.wildsmith.tank.objects.Tank;
 import com.wildsmith.tank.objects.Tower;
 import com.wildsmith.tank.objects.Wall;
 import com.wildsmith.tank.threads.DrawThread;
+import com.wildsmith.tank.utils.TimeHelper;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -24,11 +24,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private SoundManager sound;
 
+    private GamepadController gamepadController;
+
     private Tank tank;
 
     private Tower tower;
 
     private Wall wall;
+
+    private long lastUpdateTimeMillis;
 
     private boolean isSurfaceCreated;
 
@@ -38,14 +42,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         getHolder().addCallback(this);
         setFocusable(true);
 
+        lastUpdateTimeMillis = System.currentTimeMillis();
+
         drawThread = new DrawThread(getHolder(), this);
 
         sound = new SoundManager();
         sound.initSounds(context);
 
-        tank = new Tank(BitmapFactory.decodeResource(getResources(), R.drawable.tank), getResources(), sound);
-        tower = new Tower(BitmapFactory.decodeResource(getResources(), R.drawable.tower), getResources(), sound);
-        wall = new Wall(BitmapFactory.decodeResource(getResources(), R.drawable.wall), getResources(), sound);
+        gamepadController = new GamepadController();
+
+        tank = new Tank(getContext(), sound, gamepadController);
+        tower = new Tower(getContext(), sound, gamepadController);
+        wall = new Wall(getContext(), sound, gamepadController);
     }
 
     @Override
@@ -102,11 +110,37 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        final float frameDelta = getFrameDelta();
+        tank.update(frameDelta);
+        tower.update(frameDelta);
+        wall.update(frameDelta);
+
         canvas.drawColor(Color.BLACK);
 
         tank.draw(canvas);
         tower.draw(canvas);
         wall.draw(canvas);
+    }
+
+    /**
+     * @return frame Delta, frame Delta = # of "ideal" frames that have occurred since the last
+     *         update. "ideal" assumes a constant frame-rate (60 FPS or 16.7 milliseconds per
+     *         frame). Since the delta doesn't depend on the "real" frame-rate, the animations
+     *         always run at the same wall clock speed, regardless of what the real refresh rate is.
+     * 
+     *         frameDelta was used instead of a time delta in order to make the values passed to
+     *         update easier to understand when debugging the code. For example, a frameDelta of
+     *         "1.5" means that one and a half hypothetical frames have passed since the last
+     *         update. In wall time this would be 25 milliseconds or 0.025 seconds.
+     */
+    private float getFrameDelta() {
+        final long currentTimeMillis = System.currentTimeMillis();
+
+        final float frameDelta = TimeHelper.millisToFrameDelta(currentTimeMillis - lastUpdateTimeMillis);
+
+        lastUpdateTimeMillis = currentTimeMillis;
+
+        return frameDelta;
     }
 
     public SoundManager getSound() {
@@ -118,48 +152,25 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         onDraw(canvas);
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        boolean handled = false;
-        if ((event.getSource() & InputDevice.SOURCE_GAMEPAD)
-                == InputDevice.SOURCE_GAMEPAD) {
-            if (event.getRepeatCount() == 0) {
-                switch (keyCode) {
-                    // Handle gamepad and D-pad button presses to
-                    // navigate the ship
-                    ...
+    public boolean handleMotionEvent(MotionEvent motionEvent) {
+        if (gamepadController != null) {
+            gamepadController.setDeviceId(motionEvent.getDeviceId());
+            gamepadController.handleMotionEvent(motionEvent);
 
-                    default:
-                         if (isFireKey(keyCode)) {
-                             // Update the ship object to fire lasers
-                             ...
-                             handled = true;
-                         }
-                     break;
-                }
-            }
-            if (handled) {
-                return true;
-            }
-        } else // Check that the event came from a game controller
-            if ((event.getSource() & InputDevice.SOURCE_JOYSTICK) ==
-            InputDevice.SOURCE_JOYSTICK &&
-            event.getAction() == MotionEvent.ACTION_MOVE) {
-
-        // Process all historical movement samples in the batch
-        final int historySize = event.getHistorySize();
-
-        // Process the movements starting from the
-        // earliest historical position in the batch
-        for (int i = 0; i < historySize; i++) {
-            // Process the event at historical position i
-            processJoystickInput(event, i);
+            return true;
         }
 
-        // Process the current movement sample in the batch (position -1)
-        processJoystickInput(event, -1);
-        return true;
+        return false;
     }
-        return super.onKeyDown(keyCode, event);
+
+    public boolean handleKeyEvent(KeyEvent keyEvent) {
+        if (gamepadController != null) {
+            gamepadController.setDeviceId(keyEvent.getDeviceId());
+            gamepadController.handleKeyEvent(keyEvent);
+
+            return true;
+        }
+
+        return false;
     }
 }

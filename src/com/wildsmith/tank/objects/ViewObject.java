@@ -2,103 +2,73 @@ package com.wildsmith.tank.objects;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
 
 import com.wildsmith.tank.attributes.SoundManager;
-import com.wildsmith.tank.game.GameActivity;
+import com.wildsmith.tank.controller.GamepadController;
 
 public abstract class ViewObject {
 
-    protected Bitmap bitmap;
-
     protected SoundManager sound;
 
-    protected GameActivity gameActivity;
+    protected Bitmap bitmap;
 
-    protected float bitmapWidth = -1;
+    protected GamepadController gamepadController;
 
-    protected float bitmapHeight = -1;
+    protected Paint paint;
 
-    protected float bitmapHalfWidth = -1;
+    protected RectF bounds;
 
-    protected float bitmapHalfHeight = -1;
+    protected float left, right, top, bottom;
 
-    protected float canvasWidth = -1;
+    public ViewObject(int left, int right, int top, int bottom, Resources resources, int imageResourceId, SoundManager sound,
+            GamepadController gamepadController) {
+        this.left = left;
+        this.right = right;
+        this.top = top;
+        this.bottom = bottom;
 
-    protected float canvasHeight = -1;
+        this.bounds = new RectF(left, top, right, bottom);
 
-    protected int screenDensity = -1;
+        Bitmap fullImage = BitmapFactory.decodeResource(resources, imageResourceId);
+        this.bitmap = Bitmap.createScaledBitmap(fullImage, right - left, bottom - top, true);
 
-    protected float x, y;
-
-    protected boolean initialState;
-
-    public ViewObject(Bitmap bitmap, Resources resources, SoundManager sound) {
-        this.bitmap = bitmap;
         this.sound = sound;
-
-        recalculateBitmapProperties();
-
-        if (resources != null && resources.getDisplayMetrics() != null) {
-            this.screenDensity = resources.getDisplayMetrics().densityDpi;
-
-            this.canvasHeight = resources.getDisplayMetrics().heightPixels;
-            this.canvasWidth = resources.getDisplayMetrics().widthPixels;
-        }
-
-        this.initialState = true;
+        this.gamepadController = gamepadController;
+        this.paint = new Paint();
     }
 
-    protected void recalculateBitmapProperties() {
-        if (bitmap != null) {
-            this.bitmapHeight = bitmap.getHeight();
-            this.bitmapWidth = bitmap.getWidth();
-        }
-
-        if (bitmapHeight > 0) {
-            this.bitmapHalfHeight = bitmapHeight / 2;
-        }
-
-        if (bitmapWidth > 0) {
-            this.bitmapHalfWidth = bitmapWidth / 2;
-        }
+    public float getRight() {
+        return right;
     }
 
-    public Bitmap getBitmap() {
-        return bitmap;
+    public float getBottom() {
+        return bottom;
     }
 
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
+    public float getLeft() {
+        return left;
     }
 
-    public float getBitmapHalfHeight() {
-        return bitmapHalfHeight;
+    public float getTop() {
+        return top;
     }
 
-    public float getBitmapHalfWidth() {
-        return bitmapHalfWidth;
-    }
+    /**
+     * Update should be used to move the object around the canvas, NO drawing should occur in this
+     * method.
+     * 
+     * @param frameDelta
+     */
+    public abstract void update(float frameDelta);
 
-    public float getX() {
-        return x;
-    }
-
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public void setY(float y) {
-        this.y = y;
-    }
-
+    /**
+     * This method should draw the object, NO movement calculations should occur in this method.
+     * 
+     * @param canvas
+     */
     public abstract void draw(Canvas canvas);
-
-    public void setActivity(GameActivity gameActivity) {
-        this.gameActivity = gameActivity;
-    }
 }
