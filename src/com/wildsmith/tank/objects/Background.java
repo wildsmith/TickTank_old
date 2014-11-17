@@ -3,14 +3,14 @@ package com.wildsmith.tank.objects;
 import android.content.Context;
 import android.graphics.Canvas;
 
-import com.wildsmith.tank.R;
 import com.wildsmith.tank.attributes.SoundManager;
 import com.wildsmith.tank.controller.GamepadController;
 
-public class Tower extends ViewObject {
+public class Background extends ViewObject {
 
-    public Tower(float left, float right, float top, float bottom, Context context, SoundManager sound, GamepadController gamepadController) {
-        super(R.drawable.tower, left, right, top, bottom, context.getResources(), sound, gamepadController);
+    public Background(int imageResourceId, int left, int right, int top, int bottom, Context context, SoundManager sound,
+            GamepadController gamepadController) {
+        super(imageResourceId, left, right, top, bottom, context.getResources(), sound, gamepadController);
     }
 
     @Override

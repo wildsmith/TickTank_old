@@ -24,7 +24,7 @@ public abstract class ViewObject {
 
     protected float left, right, top, bottom;
 
-    public ViewObject(int left, int right, int top, int bottom, Resources resources, int imageResourceId, SoundManager sound,
+    public ViewObject(int imageResourceId, float left, float right, float top, float bottom, Resources resources, SoundManager sound,
             GamepadController gamepadController) {
         this.left = left;
         this.right = right;
@@ -34,7 +34,7 @@ public abstract class ViewObject {
         this.bounds = new RectF(left, top, right, bottom);
 
         Bitmap fullImage = BitmapFactory.decodeResource(resources, imageResourceId);
-        this.bitmap = Bitmap.createScaledBitmap(fullImage, right - left, bottom - top, true);
+        this.bitmap = Bitmap.createScaledBitmap(fullImage, (int) (right - left), (int) (bottom - top), true);
 
         this.sound = sound;
         this.gamepadController = gamepadController;
@@ -53,8 +53,21 @@ public abstract class ViewObject {
         return left;
     }
 
+    protected void setLeft(float left) {
+        this.left = left;
+    }
+
     public float getTop() {
         return top;
+    }
+
+    protected void setTop(float top) {
+        this.top = top;
+    }
+
+    protected void setPosition(float left, float top) {
+        this.left = left;
+        this.top = top;
     }
 
     /**

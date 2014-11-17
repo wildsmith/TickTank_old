@@ -55,4 +55,6 @@ public class GamepadConstants {
 
     protected static final int FRAME_INDEX_COUNT = 2;
 
+    // Minimum threshold at which the joystick must be to create movement
+    public static final float JOYSTICK_MOVEMENT_THRESHOLD = 0.1f;
 }

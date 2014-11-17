@@ -3,7 +3,6 @@ package com.wildsmith.tank.game;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -12,9 +11,8 @@ import android.view.SurfaceView;
 
 import com.wildsmith.tank.attributes.SoundManager;
 import com.wildsmith.tank.controller.GamepadController;
-import com.wildsmith.tank.objects.Tank;
-import com.wildsmith.tank.objects.Tower;
-import com.wildsmith.tank.objects.Wall;
+import com.wildsmith.tank.maps.ConstructionZone;
+import com.wildsmith.tank.maps.TickTankMap;
 import com.wildsmith.tank.threads.DrawThread;
 import com.wildsmith.tank.utils.TimeHelper;
 
@@ -26,11 +24,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private GamepadController gamepadController;
 
-    private Tank tank;
-
-    private Tower tower;
-
-    private Wall wall;
+    private TickTankMap level;
 
     private long lastUpdateTimeMillis;
 
@@ -51,9 +45,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         gamepadController = new GamepadController();
 
-        tank = new Tank(getContext(), sound, gamepadController);
-        tower = new Tower(getContext(), sound, gamepadController);
-        wall = new Wall(getContext(), sound, gamepadController);
+        // This should be loaded up dynamically
+        level = new ConstructionZone(context, sound, gamepadController);
     }
 
     @Override
@@ -111,15 +104,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     protected void onDraw(Canvas canvas) {
         final float frameDelta = getFrameDelta();
-        tank.update(frameDelta);
-        tower.update(frameDelta);
-        wall.update(frameDelta);
 
-        canvas.drawColor(Color.BLACK);
-
-        tank.draw(canvas);
-        tower.draw(canvas);
-        wall.draw(canvas);
+        level.update(frameDelta);
+        level.draw(canvas);
     }
 
     /**

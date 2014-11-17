@@ -9,14 +9,12 @@ import com.wildsmith.tank.controller.GamepadController;
 
 public class Wall extends ViewObject {
 
-    public Wall(Context context, SoundManager sound, GamepadController gamepadController) {
-        super(context, R.drawable.wall, sound, gamepadController);
+    public Wall(float left, float right, float top, float bottom, Context context, SoundManager sound, GamepadController gamepadController) {
+        super(R.drawable.wall, left, right, top, bottom, context.getResources(), sound, gamepadController);
     }
 
     @Override
-    public void update(float frameDelta) {
-        // TODO Auto-generated method stub
-    }
+    public void update(float frameDelta) {}
 
     @Override
     public void draw(Canvas canvas) {
