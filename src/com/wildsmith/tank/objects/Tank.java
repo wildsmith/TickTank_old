@@ -1,6 +1,7 @@
 package com.wildsmith.tank.objects;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 
 import com.wildsmith.tank.R;
@@ -8,6 +9,7 @@ import com.wildsmith.tank.attributes.SoundManager;
 import com.wildsmith.tank.controller.GamepadConstants;
 import com.wildsmith.tank.controller.GamepadController;
 import com.wildsmith.tank.utils.MathHelpter;
+import com.wildsmith.tank.utils.ScreenHelper;
 
 public class Tank extends ViewObject {
 
@@ -17,12 +19,16 @@ public class Tank extends ViewObject {
 
     private static final float VELOCITY_MULTIPLIER = 4.0f;
 
-    private float mVelocityX;
+    private float mVelocityX, mVelocityY;
 
-    private float mVelocityY;
+    private int canvasWidth, canvasHeight;
 
     public Tank(float left, float right, float top, float bottom, Context context, SoundManager sound, GamepadController gamepadController) {
         super(R.drawable.tank, left, right, top, bottom, context.getResources(), sound, gamepadController);
+
+        Resources resources = context.getResources();
+        this.canvasWidth = resources.getDisplayMetrics().widthPixels;
+        this.canvasHeight = resources.getDisplayMetrics().heightPixels;
     }
 
     @Override
@@ -57,6 +63,24 @@ public class Tank extends ViewObject {
     @Override
     public void draw(Canvas canvas) {
         canvas.drawBitmap(bitmap, left, top, paint);
+    }
+
+    @Override
+    protected void setTop(float top) {
+        if (ScreenHelper.isInYPlane(top, bottomToTopSize, canvasHeight)) {
+            super.setTop(top);
+        } else if (ScreenHelper.isOffScreenTop(top, bottomToTopSize) || ScreenHelper.isOffScreenBottom(top, bottomToTopSize, canvasHeight)) {
+            setVelocity(0.0f, 0.0f);
+        }
+    }
+
+    @Override
+    protected void setLeft(float left) {
+        if (ScreenHelper.isInXPlane(left, rightToLeftSize, canvasWidth)) {
+            super.setLeft(left);
+        } else if (ScreenHelper.isOffScreenLeft(left, rightToLeftSize) || ScreenHelper.isOffScreenRight(left, rightToLeftSize, canvasWidth)) {
+            setVelocity(0.0f, 0.0f);
+        }
     }
 
     public void setVelocity(float velocityX, float velocityY) {

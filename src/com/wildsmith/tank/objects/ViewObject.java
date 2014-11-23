@@ -22,7 +22,7 @@ public abstract class ViewObject {
 
     protected RectF bounds;
 
-    protected float left, right, top, bottom;
+    protected float left, right, top, bottom, bottomToTopSize, rightToLeftSize;
 
     public ViewObject(int imageResourceId, float left, float right, float top, float bottom, Resources resources, SoundManager sound,
             GamepadController gamepadController) {
@@ -32,6 +32,9 @@ public abstract class ViewObject {
         this.bottom = bottom;
 
         this.bounds = new RectF(left, top, right, bottom);
+
+        this.bottomToTopSize = bottom - top;
+        this.rightToLeftSize = right - left;
 
         Bitmap fullImage = BitmapFactory.decodeResource(resources, imageResourceId);
         this.bitmap = Bitmap.createScaledBitmap(fullImage, (int) (right - left), (int) (bottom - top), true);
@@ -66,8 +69,8 @@ public abstract class ViewObject {
     }
 
     protected void setPosition(float left, float top) {
-        this.left = left;
-        this.top = top;
+        setLeft(left);
+        setTop(top);
     }
 
     /**

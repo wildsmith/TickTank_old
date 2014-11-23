@@ -5,13 +5,11 @@ import android.graphics.Canvas;
 
 public abstract class TickTankMap {
 
-    protected int canvasHeight;
-
-    protected int canvasWidth;
+    protected int canvasWidth, canvasHeight;
 
     public TickTankMap(Resources resources) {
-        this.canvasHeight = resources.getDisplayMetrics().heightPixels;
         this.canvasWidth = resources.getDisplayMetrics().widthPixels;
+        this.canvasHeight = resources.getDisplayMetrics().heightPixels;
     }
 
     public abstract void update(float frameDelta);
