@@ -11,8 +11,8 @@ import android.view.SurfaceView;
 
 import com.wildsmith.tank.attributes.SoundManager;
 import com.wildsmith.tank.controller.GamepadController;
-import com.wildsmith.tank.maps.ConstructionZone;
-import com.wildsmith.tank.maps.TickTankMap;
+import com.wildsmith.tank.maps.LevelOne;
+import com.wildsmith.tank.maps.Level;
 import com.wildsmith.tank.threads.DrawThread;
 import com.wildsmith.tank.utils.TimeHelper;
 
@@ -24,7 +24,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private GamepadController gamepadController;
 
-    private TickTankMap level;
+    private Level level;
 
     private long lastUpdateTimeMillis;
 
@@ -46,7 +46,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         gamepadController = new GamepadController();
 
         // This should be loaded up dynamically
-        level = new ConstructionZone(context, sound, gamepadController);
+        level = new LevelOne(context, sound, gamepadController);
     }
 
     @Override

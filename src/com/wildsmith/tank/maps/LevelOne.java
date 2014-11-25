@@ -13,8 +13,9 @@ import com.wildsmith.tank.objects.Background;
 import com.wildsmith.tank.objects.Tank;
 import com.wildsmith.tank.objects.Tower;
 import com.wildsmith.tank.objects.Wall;
+import com.wildsmith.tank.utils.ViewHelper;
 
-public class ConstructionZone extends TickTankMap {
+public class LevelOne extends Level {
 
     private Background background;
 
@@ -24,7 +25,7 @@ public class ConstructionZone extends TickTankMap {
 
     private List<Wall> walls;
 
-    public ConstructionZone(Context context, SoundManager sound, GamepadController gamepadController) {
+    public LevelOne(Context context, SoundManager sound, GamepadController gamepadController) {
         super(context.getResources());
 
         setupBackground(context, sound, gamepadController);
@@ -56,13 +57,14 @@ public class ConstructionZone extends TickTankMap {
     private void setupWalls(Context context, SoundManager sound, GamepadController gamepadController) {
         walls = new ArrayList<Wall>(2);
 
-        final float wallWidth = canvasWidth / 14;
+        final float levelGrid = canvasWidth / 14;
+        final float wallWidth = ViewHelper.getPxFromDp(50, context);
 
-        final float leftWallPosition = wallWidth * 5;
+        final float leftWallPosition = levelGrid * 5;
         Wall leftWall = new Wall(leftWallPosition, leftWallPosition + wallWidth, 0, canvasHeight, context, sound, gamepadController);
         walls.add(leftWall);
 
-        final float rightWallPosition = wallWidth * 8;
+        final float rightWallPosition = levelGrid * 8;
         Wall rightWall = new Wall(rightWallPosition, rightWallPosition + wallWidth, 0, canvasHeight, context, sound, gamepadController);
         walls.add(rightWall);
     }
