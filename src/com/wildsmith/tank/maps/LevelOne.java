@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 
 import com.wildsmith.tank.R;
+import com.wildsmith.tank.attributes.Sound;
 import com.wildsmith.tank.attributes.SoundManager;
 import com.wildsmith.tank.controller.GamepadController;
 import com.wildsmith.tank.objects.Background;
@@ -27,6 +28,8 @@ public class LevelOne extends Level {
 
     public LevelOne(Context context, SoundManager sound, GamepadController gamepadController) {
         super(context.getResources());
+
+        sound.playSound(Sound.FINAL_COUNT_DOWN);
 
         setupBackground(context, sound, gamepadController);
         setupTank(context, sound, gamepadController);

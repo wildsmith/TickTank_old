@@ -20,4 +20,9 @@ public class Wall extends ViewObject {
     public void draw(Canvas canvas) {
         canvas.drawBitmap(bitmap, left, top, paint);
     }
+
+    @Override
+    public void check(Object object) {
+        // TODO We need to check to see if the wall has been hit or will hit any moving tanks
+    }
 }

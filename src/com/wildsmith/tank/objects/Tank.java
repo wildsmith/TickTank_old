@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 
 import com.wildsmith.tank.R;
+import com.wildsmith.tank.attributes.Sound;
 import com.wildsmith.tank.attributes.SoundManager;
 import com.wildsmith.tank.controller.GamepadConstants;
 import com.wildsmith.tank.controller.GamepadController;
@@ -58,6 +59,10 @@ public class Tank extends ViewObject {
         if (MathHelpter.vector2DLength(mVelocityX, mVelocityY) < MINIMUM_VELOCITY) {
             setVelocity(0.0f, 0.0f);
         }
+
+        if (gamepadController.isButtonDown(GamepadConstants.BUTTON_R2)) {
+            sound.playSound(Sound.TANK_FIRE);
+        }
     }
 
     @Override
@@ -83,6 +88,21 @@ public class Tank extends ViewObject {
         }
     }
 
+    @Override
+    protected void setPosition(float left, float top) {
+        if (sound == null) {
+            return;
+        }
+
+        if (this.left != left || this.top != top) {
+            sound.playSound(Sound.TANK_MOVEMENT);
+        } else {
+            sound.pauseSound(Sound.TANK_MOVEMENT);
+        }
+
+        super.setPosition(left, top);
+    }
+
     public void setVelocity(float velocityX, float velocityY) {
         setVelocityX(velocityX);
         setVelocityY(velocityY);
@@ -94,5 +114,11 @@ public class Tank extends ViewObject {
 
     public void setVelocityY(float velocity) {
         mVelocityY = velocity * VELOCITY_MULTIPLIER;
+    }
+
+    @Override
+    public void check(Object object) {
+        // TODO We need to check to see if the tank has been hit by any of its own bullets or enemy
+        // bullets
     }
 }

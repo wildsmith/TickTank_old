@@ -48,13 +48,6 @@ public class GamepadConstants {
 
     public static final int AXIS_COUNT = 2;
 
-    // Keep track of d pad / button states for the current and previous frames.
-    protected static final int FRAME_INDEX_CURRENT = 0;
-
-    protected static final int FRAME_INDEX_PREVIOUS = 1;
-
-    protected static final int FRAME_INDEX_COUNT = 2;
-
     // Minimum threshold at which the joystick must be to create movement
     public static final float JOYSTICK_MOVEMENT_THRESHOLD = 0.1f;
 }

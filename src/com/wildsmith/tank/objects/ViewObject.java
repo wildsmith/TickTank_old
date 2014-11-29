@@ -82,6 +82,15 @@ public abstract class ViewObject {
     public abstract void update(float frameDelta);
 
     /**
+     * Check should be used to find out if this object has been hit or will hit another object.
+     * Logic for handling that interaction should be done here. NO drawing should occur in this
+     * method.
+     * 
+     * @param object
+     */
+    public abstract void check(Object object);
+
+    /**
      * This method should draw the object, NO movement calculations should occur in this method.
      * 
      * @param canvas

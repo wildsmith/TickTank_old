@@ -20,4 +20,7 @@ public class Background extends ViewObject {
     public void draw(Canvas canvas) {
         canvas.drawBitmap(bitmap, left, top, paint);
     }
+
+    @Override
+    public void check(Object object) {}
 }

@@ -20,4 +20,9 @@ public class Tower extends ViewObject {
     public void draw(Canvas canvas) {
         canvas.drawBitmap(bitmap, left, top, paint);
     }
+
+    @Override
+    public void check(Object object) {
+        // TODO We need to check to see if the Tower has been hit by one of the tanks bullets
+    }
 }

@@ -9,13 +9,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 
-import com.wildsmith.tank.R;
-
 public class SoundManager implements OnCompletionListener {
-
-    public static final int TANK_MOVEMENT = R.raw.tank_movement;
-
-    public static final int TANK_FIRE = R.raw.tank_firing;
 
     private SparseArray<MediaPlayer> mediaPlayerMap;
 
@@ -24,6 +18,8 @@ public class SoundManager implements OnCompletionListener {
     private MediaPlayer tankMovement;
 
     private MediaPlayer tankFire;
+
+    private MediaPlayer finalCountDown;
 
     private Context context;
 
@@ -34,10 +30,13 @@ public class SoundManager implements OnCompletionListener {
         this.context = context;
 
         tankMovement = new MediaPlayer();
-        prepareMediaPlayer(context, TANK_MOVEMENT, tankMovement, true);
+        prepareMediaPlayer(context, Sound.TANK_MOVEMENT, tankMovement, false);
 
         tankFire = new MediaPlayer();
-        prepareMediaPlayer(context, TANK_FIRE, tankFire, false);
+        prepareMediaPlayer(context, Sound.TANK_FIRE, tankFire, false);
+
+        finalCountDown = new MediaPlayer();
+        prepareMediaPlayer(context, Sound.FINAL_COUNT_DOWN, finalCountDown, true);
     }
 
     private void prepareMediaPlayer(Context context, int resourceId, MediaPlayer mp, boolean isLooping) {
@@ -201,11 +200,14 @@ public class SoundManager implements OnCompletionListener {
         mp.reset();
 
         if (mp == tankMovement) {
-            prepareMediaPlayer(context, TANK_MOVEMENT, tankMovement, true);
-            mediaPlayerPlayingMap.put(TANK_MOVEMENT, false);
+            prepareMediaPlayer(context, Sound.TANK_MOVEMENT, tankMovement, false);
+            mediaPlayerPlayingMap.put(Sound.TANK_MOVEMENT, false);
         } else if (mp == tankFire) {
-            prepareMediaPlayer(context, TANK_FIRE, tankFire, false);
-            mediaPlayerPlayingMap.put(TANK_FIRE, false);
+            prepareMediaPlayer(context, Sound.TANK_FIRE, tankFire, false);
+            mediaPlayerPlayingMap.put(Sound.TANK_FIRE, false);
+        } else if (mp == finalCountDown) {
+            prepareMediaPlayer(context, Sound.FINAL_COUNT_DOWN, finalCountDown, true);
+            mediaPlayerPlayingMap.put(Sound.FINAL_COUNT_DOWN, false);
         }
     }
 }

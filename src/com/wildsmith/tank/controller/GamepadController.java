@@ -1,5 +1,9 @@
 package com.wildsmith.tank.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import android.annotation.SuppressLint;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
@@ -13,35 +17,32 @@ public class GamepadController {
     /**
      * The button states for the current and previous frames.
      */
-    private boolean mButtonState[][];
+    private Map<Integer, Boolean> mButtonState;
 
     /**
      * The d pad states for the current and previous frames.
      */
-    private boolean mDPadState[][];
+    private Map<Integer, Boolean> mDPadState;
 
     /**
      * The device that we are tuned to.
      */
     private int mDeviceId = -1;
 
+    @SuppressLint("UseSparseArrays")
     public GamepadController() {
-        mDPadState = new boolean[GamepadConstants.DPAD_COUNT][GamepadConstants.FRAME_INDEX_COUNT];
-        mButtonState = new boolean[GamepadConstants.BUTTON_COUNT][GamepadConstants.FRAME_INDEX_COUNT];
+        mDPadState = new HashMap<Integer, Boolean>(5);
+        mButtonState = new HashMap<Integer, Boolean>(8);
         mJoystickPositions = new float[GamepadConstants.JOYSTICK_COUNT][GamepadConstants.AXIS_COUNT];
     }
 
     private void resetState() {
         for (int dpad = 0; dpad < GamepadConstants.DPAD_COUNT; dpad++) {
-            for (int frame = 0; frame < GamepadConstants.FRAME_INDEX_COUNT; frame++) {
-                mDPadState[dpad][frame] = false;
-            }
+            mDPadState.put(dpad, false);
         }
 
         for (int button = 0; button < GamepadConstants.BUTTON_COUNT; button++) {
-            for (int frame = 0; frame < GamepadConstants.FRAME_INDEX_COUNT; frame++) {
-                mButtonState[button][frame] = false;
-            }
+            mButtonState.put(button, false);
         }
 
         for (int joystick = 0; joystick < GamepadConstants.JOYSTICK_COUNT; joystick++) {
@@ -63,33 +64,33 @@ public class GamepadController {
         boolean keyIsDown = keyEvent.getAction() == KeyEvent.ACTION_DOWN;
 
         if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            mDPadState[GamepadConstants.DPAD_LEFT][GamepadConstants.FRAME_INDEX_CURRENT] = keyIsDown;
+            mDPadState.put(GamepadConstants.DPAD_LEFT, keyIsDown);
         } else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            mDPadState[GamepadConstants.DPAD_RIGHT][GamepadConstants.FRAME_INDEX_CURRENT] = keyIsDown;
+            mDPadState.put(GamepadConstants.DPAD_RIGHT, keyIsDown);
         } else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
-            mDPadState[GamepadConstants.DPAD_UP][GamepadConstants.FRAME_INDEX_CURRENT] = keyIsDown;
+            mDPadState.put(GamepadConstants.DPAD_UP, keyIsDown);
         } else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
-            mDPadState[GamepadConstants.DPAD_DOWN][GamepadConstants.FRAME_INDEX_CURRENT] = keyIsDown;
+            mDPadState.put(GamepadConstants.DPAD_DOWN, keyIsDown);
         } else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
-            mDPadState[GamepadConstants.DPAD_CENTER][GamepadConstants.FRAME_INDEX_CURRENT] = keyIsDown;
+            mDPadState.put(GamepadConstants.DPAD_CENTER, keyIsDown);
         }
 
         if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_BUTTON_A) {
-            mButtonState[GamepadConstants.BUTTON_A][GamepadConstants.FRAME_INDEX_CURRENT] = keyIsDown;
+            mButtonState.put(GamepadConstants.BUTTON_A, keyIsDown);
         } else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_BUTTON_B) {
-            mButtonState[GamepadConstants.BUTTON_B][GamepadConstants.FRAME_INDEX_CURRENT] = keyIsDown;
+            mButtonState.put(GamepadConstants.BUTTON_B, keyIsDown);
         } else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_BUTTON_X) {
-            mButtonState[GamepadConstants.BUTTON_X][GamepadConstants.FRAME_INDEX_CURRENT] = keyIsDown;
+            mButtonState.put(GamepadConstants.BUTTON_X, keyIsDown);
         } else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_BUTTON_Y) {
-            mButtonState[GamepadConstants.BUTTON_Y][GamepadConstants.FRAME_INDEX_CURRENT] = keyIsDown;
+            mButtonState.put(GamepadConstants.BUTTON_Y, keyIsDown);
         } else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_BUTTON_R1) {
-            mButtonState[GamepadConstants.BUTTON_R1][GamepadConstants.FRAME_INDEX_CURRENT] = keyIsDown;
+            mButtonState.put(GamepadConstants.BUTTON_R1, keyIsDown);
         } else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_BUTTON_R2) {
-            mButtonState[GamepadConstants.BUTTON_R2][GamepadConstants.FRAME_INDEX_CURRENT] = keyIsDown;
+            mButtonState.put(GamepadConstants.BUTTON_R2, keyIsDown);
         } else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_BUTTON_L1) {
-            mButtonState[GamepadConstants.BUTTON_L1][GamepadConstants.FRAME_INDEX_CURRENT] = keyIsDown;
+            mButtonState.put(GamepadConstants.BUTTON_L1, keyIsDown);
         } else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_BUTTON_L2) {
-            mButtonState[GamepadConstants.BUTTON_L2][GamepadConstants.FRAME_INDEX_CURRENT] = keyIsDown;
+            mButtonState.put(GamepadConstants.BUTTON_L2, keyIsDown);
         }
     }
 
@@ -98,11 +99,16 @@ public class GamepadController {
     }
 
     public boolean isButtonDown(int buttonId) {
-        return mButtonState[buttonId][GamepadConstants.FRAME_INDEX_CURRENT];
+        final Boolean isButtonDown = mButtonState.get(buttonId);
+        if (isButtonDown == null) {
+            return false;
+        }
+
+        return isButtonDown;
     }
 
     public boolean isDPadDown(int dpadId) {
-        return mDPadState[dpadId][GamepadConstants.FRAME_INDEX_CURRENT];
+        return mDPadState.get(dpadId);
     }
 
     public void setDeviceId(int newId) {
