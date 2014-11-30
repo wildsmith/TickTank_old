@@ -1,16 +1,14 @@
 package com.wildsmith.tank.objects;
 
-import android.content.Context;
 import android.graphics.Canvas;
 
 import com.wildsmith.tank.R;
-import com.wildsmith.tank.attributes.SoundManager;
-import com.wildsmith.tank.controller.GamepadController;
+import com.wildsmith.tank.maps.Level;
 
 public class Tower extends ViewObject {
 
-    public Tower(float left, float right, float top, float bottom, Context context, SoundManager sound, GamepadController gamepadController) {
-        super(R.drawable.tower, left, right, top, bottom, context.getResources(), sound, gamepadController);
+    public Tower(float left, float right, float top, float bottom, Level level) {
+        super(R.drawable.tower, left, right, top, bottom, level);
     }
 
     @Override
@@ -19,10 +17,5 @@ public class Tower extends ViewObject {
     @Override
     public void draw(Canvas canvas) {
         canvas.drawBitmap(bitmap, left, top, paint);
-    }
-
-    @Override
-    public void check(Object object) {
-        // TODO We need to check to see if the Tower has been hit by one of the tanks bullets
     }
 }

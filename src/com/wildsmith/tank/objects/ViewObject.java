@@ -9,6 +9,7 @@ import android.graphics.RectF;
 
 import com.wildsmith.tank.attributes.SoundManager;
 import com.wildsmith.tank.controller.GamepadController;
+import com.wildsmith.tank.maps.Level;
 
 public abstract class ViewObject {
 
@@ -22,10 +23,13 @@ public abstract class ViewObject {
 
     protected RectF bounds;
 
+    protected Level level;
+
     protected float left, right, top, bottom, bottomToTopSize, rightToLeftSize;
 
-    public ViewObject(int imageResourceId, float left, float right, float top, float bottom, Resources resources, SoundManager sound,
-            GamepadController gamepadController) {
+    protected int canvasWidth, canvasHeight;
+
+    public ViewObject(int imageResourceId, float left, float right, float top, float bottom, Level level) {
         this.left = left;
         this.right = right;
         this.top = top;
@@ -36,12 +40,19 @@ public abstract class ViewObject {
         this.bottomToTopSize = bottom - top;
         this.rightToLeftSize = right - left;
 
+        this.level = level;
+        this.sound = level.getSound();
+        this.gamepadController = level.getGamepadController();
+
+        Resources resources = level.getContext().getResources();
+
         Bitmap fullImage = BitmapFactory.decodeResource(resources, imageResourceId);
         this.bitmap = Bitmap.createScaledBitmap(fullImage, (int) (right - left), (int) (bottom - top), true);
 
-        this.sound = sound;
-        this.gamepadController = gamepadController;
         this.paint = new Paint();
+
+        this.canvasWidth = resources.getDisplayMetrics().widthPixels;
+        this.canvasHeight = resources.getDisplayMetrics().heightPixels;
     }
 
     public float getRight() {
@@ -78,17 +89,9 @@ public abstract class ViewObject {
      * method.
      * 
      * @param frameDelta
+     * @param level
      */
     public abstract void update(float frameDelta);
-
-    /**
-     * Check should be used to find out if this object has been hit or will hit another object.
-     * Logic for handling that interaction should be done here. NO drawing should occur in this
-     * method.
-     * 
-     * @param object
-     */
-    public abstract void check(Object object);
 
     /**
      * This method should draw the object, NO movement calculations should occur in this method.

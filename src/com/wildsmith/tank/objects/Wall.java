@@ -1,16 +1,14 @@
 package com.wildsmith.tank.objects;
 
-import android.content.Context;
 import android.graphics.Canvas;
 
 import com.wildsmith.tank.R;
-import com.wildsmith.tank.attributes.SoundManager;
-import com.wildsmith.tank.controller.GamepadController;
+import com.wildsmith.tank.maps.Level;
 
 public class Wall extends ViewObject {
 
-    public Wall(float left, float right, float top, float bottom, Context context, SoundManager sound, GamepadController gamepadController) {
-        super(R.drawable.wall, left, right, top, bottom, context.getResources(), sound, gamepadController);
+    public Wall(float left, float right, float top, float bottom, Level level) {
+        super(R.drawable.wall, left, right, top, bottom, level);
     }
 
     @Override
@@ -19,10 +17,5 @@ public class Wall extends ViewObject {
     @Override
     public void draw(Canvas canvas) {
         canvas.drawBitmap(bitmap, left, top, paint);
-    }
-
-    @Override
-    public void check(Object object) {
-        // TODO We need to check to see if the wall has been hit or will hit any moving tanks
     }
 }

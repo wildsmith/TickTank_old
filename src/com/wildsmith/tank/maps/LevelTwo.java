@@ -26,21 +26,21 @@ public class LevelTwo extends Level {
     public LevelTwo(Context context, SoundManager sound, GamepadController gamepadController) {
         super(context.getResources());
 
-        setupBackground(context, sound, gamepadController);
-        setupTank(context, sound, gamepadController);
-        setupTower(context, sound, gamepadController);
-        setupWalls(context, sound, gamepadController);
+        setupBackground();
+        setupTank();
+        setupTower();
+        setupWalls();
     }
 
-    private void setupBackground(Context context, SoundManager sound, GamepadController gamepadController) {
-        background = new Background(R.drawable.graph_paper, 0, canvasWidth, 0, canvasHeight, context, sound, gamepadController);
+    private void setupBackground() {
+        background = new Background(R.drawable.graph_paper, 0, canvasWidth, 0, canvasHeight, this);
     }
 
-    private void setupTank(Context context, SoundManager sound, GamepadController gamepadController) {}
+    private void setupTank() {}
 
-    private void setupTower(Context context, SoundManager sound, GamepadController gamepadController) {}
+    private void setupTower() {}
 
-    private void setupWalls(Context context, SoundManager sound, GamepadController gamepadController) {}
+    private void setupWalls() {}
 
     @Override
     public void update(float frameDelta) {

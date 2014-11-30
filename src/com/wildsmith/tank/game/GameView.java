@@ -11,8 +11,8 @@ import android.view.SurfaceView;
 
 import com.wildsmith.tank.attributes.SoundManager;
 import com.wildsmith.tank.controller.GamepadController;
-import com.wildsmith.tank.maps.LevelOne;
 import com.wildsmith.tank.maps.Level;
+import com.wildsmith.tank.maps.LevelOne;
 import com.wildsmith.tank.threads.DrawThread;
 import com.wildsmith.tank.utils.TimeHelper;
 

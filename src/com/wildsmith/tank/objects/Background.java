@@ -1,16 +1,13 @@
 package com.wildsmith.tank.objects;
 
-import android.content.Context;
 import android.graphics.Canvas;
 
-import com.wildsmith.tank.attributes.SoundManager;
-import com.wildsmith.tank.controller.GamepadController;
+import com.wildsmith.tank.maps.Level;
 
 public class Background extends ViewObject {
 
-    public Background(int imageResourceId, int left, int right, int top, int bottom, Context context, SoundManager sound,
-            GamepadController gamepadController) {
-        super(imageResourceId, left, right, top, bottom, context.getResources(), sound, gamepadController);
+    public Background(int imageResourceId, int left, int right, int top, int bottom, Level level) {
+        super(imageResourceId, left, right, top, bottom, level);
     }
 
     @Override
@@ -20,7 +17,4 @@ public class Background extends ViewObject {
     public void draw(Canvas canvas) {
         canvas.drawBitmap(bitmap, left, top, paint);
     }
-
-    @Override
-    public void check(Object object) {}
 }

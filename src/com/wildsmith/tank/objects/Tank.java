@@ -1,14 +1,12 @@
 package com.wildsmith.tank.objects;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.RectF;
 
 import com.wildsmith.tank.R;
 import com.wildsmith.tank.attributes.Sound;
-import com.wildsmith.tank.attributes.SoundManager;
 import com.wildsmith.tank.controller.GamepadConstants;
-import com.wildsmith.tank.controller.GamepadController;
+import com.wildsmith.tank.maps.Level;
 import com.wildsmith.tank.utils.MathHelpter;
 import com.wildsmith.tank.utils.ScreenHelper;
 
@@ -22,14 +20,8 @@ public class Tank extends ViewObject {
 
     private float mVelocityX, mVelocityY;
 
-    private int canvasWidth, canvasHeight;
-
-    public Tank(float left, float right, float top, float bottom, Context context, SoundManager sound, GamepadController gamepadController) {
-        super(R.drawable.tank, left, right, top, bottom, context.getResources(), sound, gamepadController);
-
-        Resources resources = context.getResources();
-        this.canvasWidth = resources.getDisplayMetrics().widthPixels;
-        this.canvasHeight = resources.getDisplayMetrics().heightPixels;
+    public Tank(float left, float right, float top, float bottom, Level level) {
+        super(R.drawable.tank, left, right, top, bottom, level);
     }
 
     @Override
@@ -90,6 +82,20 @@ public class Tank extends ViewObject {
 
     @Override
     protected void setPosition(float left, float top) {
+        RectF newBounds = new RectF(left, top, right, bottom);
+
+        // We need to check to see if the tank has been hit by any of its own bullets or enemy
+        // bullets
+        boolean isIntersectingWithBullets = isIntersectingWithBullets(newBounds);
+
+        // We need to check to see if the tank has hit the wall(s)
+        boolean isIntersectingWithWalls = isIntersectingWithWalls(newBounds);
+
+        if (isIntersectingWithBullets || isIntersectingWithWalls) {
+            setVelocity(0.0f, 0.0f);
+            return;
+        }
+
         if (sound == null) {
             return;
         }
@@ -116,9 +122,29 @@ public class Tank extends ViewObject {
         mVelocityY = velocity * VELOCITY_MULTIPLIER;
     }
 
-    @Override
-    public void check(Object object) {
-        // TODO We need to check to see if the tank has been hit by any of its own bullets or enemy
-        // bullets
+    private boolean isIntersectingWithBullets(RectF newBounds) {
+        boolean isIntersecting = false;
+        for (Bullet bullet : level.getBullets()) {
+            if (isIntersecting) {
+                break;
+            }
+
+            isIntersecting = ScreenHelper.isIntersecting(newBounds, bullet.bounds);
+        }
+
+        return isIntersecting;
+    }
+
+    private boolean isIntersectingWithWalls(RectF newBounds) {
+        boolean isIntersecting = false;
+        for (Wall wall : level.getWalls()) {
+            if (isIntersecting) {
+                break;
+            }
+
+            isIntersecting = ScreenHelper.isIntersecting(newBounds, wall.bounds);
+        }
+
+        return isIntersecting;
     }
 }
