@@ -33,7 +33,7 @@ public class LevelTwo extends Level {
     }
 
     private void setupBackground() {
-        background = new Background(R.drawable.graph_paper, 0, canvasWidth, 0, canvasHeight, this);
+        background = new Background(R.drawable.grass_background, 0, canvasWidth, 0, canvasHeight, this);
     }
 
     private void setupTank() {}

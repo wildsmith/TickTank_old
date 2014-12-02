@@ -15,6 +15,6 @@ public class Background extends ViewObject {
 
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(bitmap, left, top, paint);
+        canvas.drawBitmap(bitmap, getLeft(), getTop(), paint);
     }
 }

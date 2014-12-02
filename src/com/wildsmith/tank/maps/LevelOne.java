@@ -33,12 +33,12 @@ public class LevelOne extends Level {
     }
 
     private void setupBackground() {
-        background = new Background(R.drawable.graph_paper, 0, canvasWidth, 0, canvasHeight, this);
+        background = new Background(R.drawable.grass_background, 0, canvasWidth, 0, canvasHeight, this);
     }
 
     private void setupTank() {
-        final float tankWidth = canvasWidth / 12;
-        final float tankHeight = canvasWidth / 12;
+        final float tankWidth = ViewHelper.getPxFromDp(40, context);
+        final float tankHeight = ViewHelper.getPxFromDp(50, context);
         tank =
                 new Tank(canvasWidth / 2 - (tankWidth / 2), canvasWidth / 2 + (tankWidth / 2), canvasHeight - tankHeight, canvasHeight,
                         this);

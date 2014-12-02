@@ -25,20 +25,15 @@ public abstract class ViewObject {
 
     protected Level level;
 
-    protected float left, right, top, bottom, bottomToTopSize, rightToLeftSize;
+    protected float height, width;
 
     protected int canvasWidth, canvasHeight;
 
     public ViewObject(int imageResourceId, float left, float right, float top, float bottom, Level level) {
-        this.left = left;
-        this.right = right;
-        this.top = top;
-        this.bottom = bottom;
-
         this.bounds = new RectF(left, top, right, bottom);
 
-        this.bottomToTopSize = bottom - top;
-        this.rightToLeftSize = right - left;
+        this.height = bottom - top;
+        this.width = right - left;
 
         this.level = level;
         this.sound = level.getSound();
@@ -56,27 +51,29 @@ public abstract class ViewObject {
     }
 
     public float getRight() {
-        return right;
+        return bounds.right;
     }
 
     public float getBottom() {
-        return bottom;
+        return bounds.bottom;
     }
 
     public float getLeft() {
-        return left;
+        return bounds.left;
     }
 
     protected void setLeft(float left) {
-        this.left = left;
+        bounds.left = left;
+        bounds.right = left + width;
     }
 
     public float getTop() {
-        return top;
+        return bounds.top;
     }
 
     protected void setTop(float top) {
-        this.top = top;
+        bounds.top = top;
+        bounds.bottom = top + height;
     }
 
     protected void setPosition(float left, float top) {

@@ -53,11 +53,36 @@ public class GamepadController {
     }
 
     public void handleMotionEvent(MotionEvent motionEvent) {
-        mJoystickPositions[GamepadConstants.JOYSTICK_1][GamepadConstants.AXIS_X] = motionEvent.getAxisValue(MotionEvent.AXIS_X);
-        mJoystickPositions[GamepadConstants.JOYSTICK_1][GamepadConstants.AXIS_Y] = motionEvent.getAxisValue(MotionEvent.AXIS_Y);
+        mDPadState.put(GamepadConstants.DPAD_LEFT, false);
+        mDPadState.put(GamepadConstants.DPAD_RIGHT, false);
+        mDPadState.put(GamepadConstants.DPAD_UP, false);
+        mDPadState.put(GamepadConstants.DPAD_DOWN, false);
+        mButtonState.put(GamepadConstants.BUTTON_R2, false);
+        mButtonState.put(GamepadConstants.BUTTON_L2, false);
 
-        mJoystickPositions[GamepadConstants.JOYSTICK_2][GamepadConstants.AXIS_X] = motionEvent.getAxisValue(MotionEvent.AXIS_Z);
-        mJoystickPositions[GamepadConstants.JOYSTICK_2][GamepadConstants.AXIS_Y] = motionEvent.getAxisValue(MotionEvent.AXIS_RZ);
+        float rTrigger = motionEvent.getAxisValue(MotionEvent.AXIS_RTRIGGER);
+        float lTrigger = motionEvent.getAxisValue(MotionEvent.AXIS_LTRIGGER);
+        float xAxis = motionEvent.getAxisValue(MotionEvent.AXIS_HAT_X);
+        float yAxis = motionEvent.getAxisValue(MotionEvent.AXIS_HAT_Y);
+        if (Float.compare(xAxis, -1.0f) == 0) {
+            mDPadState.put(GamepadConstants.DPAD_LEFT, true);
+        } else if (Float.compare(xAxis, 1.0f) == 0) {
+            mDPadState.put(GamepadConstants.DPAD_RIGHT, true);
+        } else if (Float.compare(yAxis, -1.0f) == 0) {
+            mDPadState.put(GamepadConstants.DPAD_UP, true);
+        } else if (Float.compare(yAxis, 1.0f) == 0) {
+            mDPadState.put(GamepadConstants.DPAD_DOWN, true);
+        } else if (rTrigger > 0) {
+            mButtonState.put(GamepadConstants.BUTTON_R2, true);
+        } else if (lTrigger > 0) {
+            mButtonState.put(GamepadConstants.BUTTON_L2, true);
+        } else {
+            mJoystickPositions[GamepadConstants.JOYSTICK_1][GamepadConstants.AXIS_X] = motionEvent.getAxisValue(MotionEvent.AXIS_X);
+            mJoystickPositions[GamepadConstants.JOYSTICK_1][GamepadConstants.AXIS_Y] = motionEvent.getAxisValue(MotionEvent.AXIS_Y);
+
+            mJoystickPositions[GamepadConstants.JOYSTICK_2][GamepadConstants.AXIS_X] = motionEvent.getAxisValue(MotionEvent.AXIS_Z);
+            mJoystickPositions[GamepadConstants.JOYSTICK_2][GamepadConstants.AXIS_Y] = motionEvent.getAxisValue(MotionEvent.AXIS_RZ);
+        }
     }
 
     public void handleKeyEvent(KeyEvent keyEvent) {
@@ -105,6 +130,10 @@ public class GamepadController {
         }
 
         return isButtonDown;
+    }
+
+    public void setButtonDown(int buttonId, boolean isButtonDown) {
+        mButtonState.put(buttonId, isButtonDown);
     }
 
     public boolean isDPadDown(int dpadId) {
