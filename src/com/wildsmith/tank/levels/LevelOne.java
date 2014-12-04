@@ -1,4 +1,4 @@
-package com.wildsmith.tank.maps;
+package com.wildsmith.tank.levels;
 
 import java.util.ArrayList;
 
@@ -10,6 +10,7 @@ import com.wildsmith.tank.attributes.Sound;
 import com.wildsmith.tank.attributes.SoundManager;
 import com.wildsmith.tank.controller.GamepadController;
 import com.wildsmith.tank.objects.Background;
+import com.wildsmith.tank.objects.Bullet;
 import com.wildsmith.tank.objects.Tank;
 import com.wildsmith.tank.objects.Tower;
 import com.wildsmith.tank.objects.Wall;
@@ -67,11 +68,13 @@ public class LevelOne extends Level {
 
     @Override
     public void update(float frameDelta) {
-        tank.update(frameDelta);
         tower.update(frameDelta);
+        tank.update(frameDelta);
 
-        for (Wall wall : walls) {
-            wall.update(frameDelta);
+        if (bullets != null && bullets.isEmpty() == false) {
+            for (Bullet bullet : bullets) {
+                bullet.update(frameDelta);
+            }
         }
     }
 
@@ -79,11 +82,19 @@ public class LevelOne extends Level {
     public void draw(Canvas canvas) {
         background.draw(canvas);
 
-        for (Wall wall : walls) {
-            wall.draw(canvas);
+        if (walls != null && walls.isEmpty() == false) {
+            for (Wall wall : walls) {
+                wall.draw(canvas);
+            }
         }
 
         tower.draw(canvas);
         tank.draw(canvas);
+
+        if (bullets != null && bullets.isEmpty() == false) {
+            for (Bullet bullet : bullets) {
+                bullet.draw(canvas);
+            }
+        }
     }
 }

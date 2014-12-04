@@ -3,7 +3,7 @@ package com.wildsmith.tank.objects;
 import android.graphics.Canvas;
 
 import com.wildsmith.tank.R;
-import com.wildsmith.tank.maps.Level;
+import com.wildsmith.tank.levels.Level;
 
 public class Tower extends ViewObject {
 

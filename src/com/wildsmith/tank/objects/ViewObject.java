@@ -9,7 +9,7 @@ import android.graphics.RectF;
 
 import com.wildsmith.tank.attributes.SoundManager;
 import com.wildsmith.tank.controller.GamepadController;
-import com.wildsmith.tank.maps.Level;
+import com.wildsmith.tank.levels.Level;
 
 public abstract class ViewObject {
 

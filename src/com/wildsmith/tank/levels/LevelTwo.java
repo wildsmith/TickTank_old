@@ -1,4 +1,4 @@
-package com.wildsmith.tank.maps;
+package com.wildsmith.tank.levels;
 
 import java.util.List;
 

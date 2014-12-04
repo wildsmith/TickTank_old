@@ -1,5 +1,6 @@
 package com.wildsmith.tank.objects;
 
+import java.util.Calendar;
 import java.util.List;
 
 import android.content.res.Resources;
@@ -12,7 +13,7 @@ import android.graphics.RectF;
 import com.wildsmith.tank.R;
 import com.wildsmith.tank.attributes.Sound;
 import com.wildsmith.tank.controller.GamepadConstants;
-import com.wildsmith.tank.maps.Level;
+import com.wildsmith.tank.levels.Level;
 import com.wildsmith.tank.utils.MathHelpter;
 import com.wildsmith.tank.utils.ScreenHelper;
 
@@ -24,13 +25,21 @@ public class Tank extends ViewObject {
 
     private static final float VELOCITY_MULTIPLIER = 4.0f;
 
+    private static final int BULLET_FIRE_MILLISECOND_INTERVAL = 500;
+
     private RectF barrelBounds;
 
     private Bitmap barrelBitmap;
 
     private Matrix barrelMatrix;
 
-    private float mVelocityX, mVelocityY, mAimX, mAimY;
+    private Calendar prevBulletFire;
+
+    private float velocityX, velocityY, aimX, aimY;
+
+    private float barrelHeight, barrelWidth;
+
+    private boolean hasBarrelRotated;
 
     public Tank(float left, float right, float top, float bottom, Level level) {
         super(R.drawable.tank, left, right, top, bottom, level);
@@ -39,10 +48,10 @@ public class Tank extends ViewObject {
     }
 
     private void setupTankBarrel(float left, float right, float top, float bottom, Level level) {
-        final float barrelWidth = width / 5;
-        final float barrelHeight = height / 2 + height / 4;
+        barrelWidth = width / 5;
+        barrelHeight = height / 2 + height / 4;
 
-        final float barrelLeft = width / 2 - barrelWidth / 2;
+        final float barrelLeft = getLeft() + (width / 2) - (barrelWidth / 2);
         final float barrelTop = top - height / 4;
 
         barrelBounds = new RectF(barrelLeft, barrelTop, barrelWidth, barrelHeight);
@@ -51,8 +60,10 @@ public class Tank extends ViewObject {
         Bitmap fullImage = BitmapFactory.decodeResource(resources, R.drawable.tank_barrel);
         barrelBitmap = Bitmap.createScaledBitmap(fullImage, (int) barrelWidth, (int) barrelHeight, true);
 
-        mAimX = left + (barrelWidth / 2);
-        mAimY = top;
+        barrelMatrix = new Matrix();
+
+        aimX = left + (barrelWidth / 2);
+        aimY = top;
     }
 
     @Override
@@ -62,24 +73,62 @@ public class Tank extends ViewObject {
     }
 
     private void updateBarrel(float frameDelta) {
-        float newAimX = gamepadController.getJoystickPosition(GamepadConstants.JOYSTICK_2, GamepadConstants.AXIS_X);
-        float newAimY = gamepadController.getJoystickPosition(GamepadConstants.JOYSTICK_2, GamepadConstants.AXIS_Y);
-
-        if (gamepadController.isButtonDown(GamepadConstants.BUTTON_R2)) {
+        if (gamepadController.isButtonDown(GamepadConstants.BUTTON_R2) && canFireNewBullet()) {
             sound.playSound(Sound.TANK_FIRE);
+            createBullet();
         }
 
-        if (mAimX == newAimX && mAimY == newAimY) {
+        float newAimX = gamepadController.getJoystickPosition(GamepadConstants.JOYSTICK_2, GamepadConstants.AXIS_X);
+        float newAimY = gamepadController.getJoystickPosition(GamepadConstants.JOYSTICK_2, GamepadConstants.AXIS_Y);
+        if (aimX == newAimX && aimY == newAimY) {
+            hasBarrelRotated = false;
             return;
         }
 
-        final double angle = Math.atan(((newAimY * mAimX) - (newAimX - mAimY)) / ((newAimX * mAimX) + (newAimY * mAimY)));
+        final double angle = Math.atan(((newAimY * aimX) - (newAimX - aimY)) / ((newAimX * aimX) + (newAimY * aimY)));
+        if (Double.isNaN(angle)) {
+            return;
+        }
 
-        barrelMatrix = new Matrix();
         barrelMatrix.setRotate((float) angle, (bounds.bottom - bounds.top) / 2, (bounds.right - bounds.left) / 2);
 
-        mAimX = newAimX;
-        mAimY = newAimY;
+        aimX = newAimX;
+        aimY = newAimY;
+
+        hasBarrelRotated = true;
+    }
+
+    private boolean canFireNewBullet() {
+        if (prevBulletFire == null) {
+            prevBulletFire = Calendar.getInstance();
+            return true;
+        }
+
+        Calendar newBulletFire = Calendar.getInstance();
+        if (newBulletFire == null) {
+            return false;
+        }
+
+        Calendar prevBulletFireClone = (Calendar) prevBulletFire.clone();
+        prevBulletFireClone.add(Calendar.MILLISECOND, BULLET_FIRE_MILLISECOND_INTERVAL);
+
+        if (newBulletFire.compareTo(prevBulletFireClone) >= 0) {
+            prevBulletFire = newBulletFire;
+            return true;
+        }
+
+        return false;
+    }
+
+    private void createBullet() {
+        final float bulletWidth = barrelWidth / 1.5f;
+        final float bulletHeight = barrelWidth / 1.5f;
+
+        final float bulletLeft = getLeft() + (width / 2) - (bulletWidth / 2);
+        final float bulletTop = barrelBounds.top - bulletHeight;
+
+        Bullet bullet = new Bullet(bulletLeft, bulletLeft + bulletWidth, bulletTop, bulletTop + bulletHeight, level);
+        level.addBullet(bullet);
     }
 
     private void updateTank(float frameDelta) {
@@ -100,17 +149,17 @@ public class Tank extends ViewObject {
 
             if (magnitude > 1.0f) {
                 // Sets a cap velocity
-                mVelocityX = mVelocityX / magnitude;
-                mVelocityY = mVelocityY / magnitude;
+                velocityX = velocityX / magnitude;
+                velocityY = velocityY / magnitude;
             }
         }
 
-        setPosition(getLeft() + mVelocityX * frameDelta, getTop() + mVelocityY * frameDelta);
+        setPosition(getLeft() + velocityX * frameDelta, getTop() + velocityY * frameDelta);
 
         // Use drag so that the tank will coast to a stop after the movement controller is released.
-        mVelocityX *= 1.0f - frameDelta * DRAG;
-        mVelocityY *= 1.0f - frameDelta * DRAG;
-        if (MathHelpter.vector2DLength(mVelocityX, mVelocityY) < MINIMUM_VELOCITY) {
+        velocityX *= 1.0f - frameDelta * DRAG;
+        velocityY *= 1.0f - frameDelta * DRAG;
+        if (MathHelpter.vector2DLength(velocityX, velocityY) < MINIMUM_VELOCITY) {
             setVelocity(0.0f, 0.0f);
         }
     }
@@ -119,43 +168,54 @@ public class Tank extends ViewObject {
     public void draw(Canvas canvas) {
         canvas.drawBitmap(bitmap, getLeft(), getTop(), paint);
 
-        // if (barrelMatrix != null) {
-        // canvas.drawBitmap(barrelBitmap, barrelMatrix, paint);
-        // } else {
-        canvas.drawBitmap(barrelBitmap, barrelBounds.left, barrelBounds.top, paint);
-        // }
+        if (hasBarrelRotated) {
+            canvas.drawBitmap(barrelBitmap, barrelMatrix, paint);
+        } else {
+            canvas.drawBitmap(barrelBitmap, barrelBounds.left, barrelBounds.top, paint);
+        }
     }
 
     @Override
     protected void setTop(float top) {
         if (ScreenHelper.isInYPlane(top, height, canvasHeight)) {
+            setBarrelTop(top);
             super.setTop(top);
         } else if (ScreenHelper.isOffScreenTop(top, height) || ScreenHelper.isOffScreenBottom(top, height, canvasHeight)) {
             setVelocity(0.0f, 0.0f);
         }
     }
 
+    private void setBarrelTop(float top) {
+        barrelBounds.top += top - getTop();
+        barrelBounds.bottom = barrelBounds.top + barrelHeight;
+    }
+
     @Override
     protected void setLeft(float left) {
         if (ScreenHelper.isInXPlane(left, width, canvasWidth)) {
+            setBarrelLeft(left);
             super.setLeft(left);
         } else if (ScreenHelper.isOffScreenLeft(left, width) || ScreenHelper.isOffScreenRight(left, width, canvasWidth)) {
             setVelocity(0.0f, 0.0f);
         }
     }
 
+    private void setBarrelLeft(float left) {
+        barrelBounds.left += left - getLeft();
+        barrelBounds.right = barrelBounds.left + barrelWidth;
+    }
+
     @Override
     protected void setPosition(float left, float top) {
         RectF newBounds = new RectF(left, top, left + width, top + height);
 
-        // We need to check to see if the tank has been hit by any of its own bullets or enemy
-        // bullets
-        boolean isIntersectingWithBullets = isIntersectingWithBullets(newBounds);
+        // TODO this works but if we intersect with bullets we need to make sure that they dissolve
+        // and we loose health
+        // boolean isIntersectingWithBullets = isIntersectingWithBullets(newBounds);
 
-        // We need to check to see if the tank has hit the wall(s)
         boolean isIntersectingWithWalls = isIntersectingWithWalls(newBounds);
 
-        if (isIntersectingWithBullets || isIntersectingWithWalls) {
+        if (/* isIntersectingWithBullets || */isIntersectingWithWalls) {
             setVelocity(0.0f, 0.0f);
             return;
         }
@@ -179,11 +239,11 @@ public class Tank extends ViewObject {
     }
 
     public void setVelocityX(float velocity) {
-        mVelocityX = velocity * VELOCITY_MULTIPLIER;
+        velocityX = velocity * VELOCITY_MULTIPLIER;
     }
 
     public void setVelocityY(float velocity) {
-        mVelocityY = velocity * VELOCITY_MULTIPLIER;
+        velocityY = velocity * VELOCITY_MULTIPLIER;
     }
 
     private boolean isIntersectingWithBullets(RectF newBounds) {

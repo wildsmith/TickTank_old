@@ -1,5 +1,6 @@
-package com.wildsmith.tank.maps;
+package com.wildsmith.tank.levels;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -65,6 +66,14 @@ public abstract class Level {
 
     public List<Bullet> getBullets() {
         return bullets;
+    }
+
+    public void addBullet(Bullet bullet) {
+        if (bullets == null) {
+            bullets = new ArrayList<Bullet>(8);
+        }
+
+        bullets.add(bullet);
     }
 
     public List<Wall> getWalls() {

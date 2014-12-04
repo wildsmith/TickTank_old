@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.annotation.SuppressLint;
+import android.view.InputDevice;
+import android.view.InputDevice.MotionRange;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
@@ -72,17 +74,40 @@ public class GamepadController {
             mDPadState.put(GamepadConstants.DPAD_UP, true);
         } else if (Float.compare(yAxis, 1.0f) == 0) {
             mDPadState.put(GamepadConstants.DPAD_DOWN, true);
-        } else if (rTrigger > 0) {
-            mButtonState.put(GamepadConstants.BUTTON_R2, true);
-        } else if (lTrigger > 0) {
-            mButtonState.put(GamepadConstants.BUTTON_L2, true);
-        } else {
-            mJoystickPositions[GamepadConstants.JOYSTICK_1][GamepadConstants.AXIS_X] = motionEvent.getAxisValue(MotionEvent.AXIS_X);
-            mJoystickPositions[GamepadConstants.JOYSTICK_1][GamepadConstants.AXIS_Y] = motionEvent.getAxisValue(MotionEvent.AXIS_Y);
+        } else
 
-            mJoystickPositions[GamepadConstants.JOYSTICK_2][GamepadConstants.AXIS_X] = motionEvent.getAxisValue(MotionEvent.AXIS_Z);
-            mJoystickPositions[GamepadConstants.JOYSTICK_2][GamepadConstants.AXIS_Y] = motionEvent.getAxisValue(MotionEvent.AXIS_RZ);
+        if (rTrigger > 0.30) {
+            mButtonState.put(GamepadConstants.BUTTON_R2, true);
         }
+        if (lTrigger > 0.30) {
+            mButtonState.put(GamepadConstants.BUTTON_L2, true);
+        }
+
+        mJoystickPositions[GamepadConstants.JOYSTICK_1][GamepadConstants.AXIS_X] = getAxisValue(motionEvent, MotionEvent.AXIS_X);
+        mJoystickPositions[GamepadConstants.JOYSTICK_1][GamepadConstants.AXIS_Y] = getAxisValue(motionEvent, MotionEvent.AXIS_Y);
+
+        mJoystickPositions[GamepadConstants.JOYSTICK_2][GamepadConstants.AXIS_X] = getAxisValue(motionEvent, MotionEvent.AXIS_Z);
+        mJoystickPositions[GamepadConstants.JOYSTICK_2][GamepadConstants.AXIS_Y] = getAxisValue(motionEvent, MotionEvent.AXIS_RZ);
+    }
+
+    private float getAxisValue(MotionEvent motionEvent, int axis) {
+        InputDevice device = InputDevice.getDevice(mDeviceId);
+        if (device == null) {
+            return 0f;
+        }
+
+        MotionRange range = device.getMotionRange(axis, motionEvent.getSource());
+        if (range == null) {
+            return 0f;
+        }
+
+        final float flat = range.getFlat();
+        final float value = motionEvent.getAxisValue(axis);
+        if (Math.abs(value) > flat) {
+            return value;
+        }
+
+        return 0f;
     }
 
     public void handleKeyEvent(KeyEvent keyEvent) {
