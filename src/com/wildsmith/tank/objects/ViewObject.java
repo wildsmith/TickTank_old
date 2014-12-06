@@ -45,6 +45,9 @@ public abstract class ViewObject {
         this.bitmap = Bitmap.createScaledBitmap(fullImage, (int) (right - left), (int) (bottom - top), true);
 
         this.paint = new Paint();
+        this.paint.setAntiAlias(true);
+        this.paint.setDither(true);
+        this.paint.setFilterBitmap(true);
 
         this.canvasWidth = resources.getDisplayMetrics().widthPixels;
         this.canvasHeight = resources.getDisplayMetrics().heightPixels;

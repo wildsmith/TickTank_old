@@ -1,5 +1,12 @@
 <resources>
 
     <string name="app_name">Tick Tank</string>
+    
+    <string name="level_one_description">Level one</string>
+    <string name="level_two_description">Level two</string>
+    
+    <string name="level_type_one">Battle by Land</string>
+    <string name="level_type_two">Storm by Water</string>
+    <string name="level_settings">Settings</string>
 
 </resources>

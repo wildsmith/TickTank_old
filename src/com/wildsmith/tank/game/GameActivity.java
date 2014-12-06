@@ -15,6 +15,8 @@ import com.wildsmith.tank.attributes.ScreenReceiver;
 
 public class GameActivity extends Activity {
 
+    public static final String LEVEL_EXTRA = "LEVEL_EXTRA";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,13 +25,25 @@ public class GameActivity extends Activity {
         // making it full screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         // set our GameView as the view
-        setContentView(R.layout.tank_game);
+        setContentView(R.layout.tank_game_layout);
 
         // creates broadcast listener for if the screen is locked or forced off by user
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         BroadcastReceiver mReceiver = new ScreenReceiver();
         registerReceiver(mReceiver, filter);
+
+        setupGameLevel();
+    }
+
+    private void setupGameLevel() {
+        GameView gameView = (GameView) findViewById(R.id.gameView);
+        Intent intent = getIntent();
+        if (gameView == null || intent == null) {
+            return;
+        }
+
+        gameView.setLevel(intent.getIntExtra(LEVEL_EXTRA, 1));
     }
 
     @Override

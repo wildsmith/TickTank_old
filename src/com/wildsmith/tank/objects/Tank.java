@@ -78,24 +78,34 @@ public class Tank extends ViewObject {
             createBullet();
         }
 
-        float newAimX = gamepadController.getJoystickPosition(GamepadConstants.JOYSTICK_2, GamepadConstants.AXIS_X);
-        float newAimY = gamepadController.getJoystickPosition(GamepadConstants.JOYSTICK_2, GamepadConstants.AXIS_Y);
-        if (aimX == newAimX && aimY == newAimY) {
-            hasBarrelRotated = false;
-            return;
-        }
+        return;
 
-        final double angle = Math.atan(((newAimY * aimX) - (newAimX - aimY)) / ((newAimX * aimX) + (newAimY * aimY)));
-        if (Double.isNaN(angle)) {
-            return;
-        }
-
-        barrelMatrix.setRotate((float) angle, (bounds.bottom - bounds.top) / 2, (bounds.right - bounds.left) / 2);
-
-        aimX = newAimX;
-        aimY = newAimY;
-
-        hasBarrelRotated = true;
+        // float newAimX = gamepadController.getJoystickPosition(GamepadConstants.JOYSTICK_2,
+        // GamepadConstants.AXIS_X);
+        // float newAimY = gamepadController.getJoystickPosition(GamepadConstants.JOYSTICK_2,
+        // GamepadConstants.AXIS_Y);
+        // if (aimX == newAimX && aimY == newAimY || newAimX == 0 && newAimY == 0) {
+        // return;
+        // }
+        //
+        // float deltaY = newAimY - aimY;
+        // float deltaX = newAimX - aimX;
+        // final double angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+        // if (Double.isNaN(angle)) {
+        // return;
+        // }
+        //
+        // barrelMatrix.setRotate((float) angle, getTop() + barrelHeight / 2, getLeft() +
+        // barrelWidth / 2);
+        // RectF rectF = new RectF(0, 0, barrelWidth, barrelHeight);
+        // barrelMatrix.mapRect(rectF);
+        // barrelBitmap = Bitmap.createBitmap((int) rectF.width(), (int) rectF.height(),
+        // Bitmap.Config.ARGB_8888);
+        //
+        // aimX = newAimX;
+        // aimY = newAimY;
+        //
+        // hasBarrelRotated = true;
     }
 
     private boolean canFireNewBullet() {

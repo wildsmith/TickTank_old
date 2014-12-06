@@ -12,7 +12,7 @@ import android.view.SurfaceView;
 import com.wildsmith.tank.attributes.SoundManager;
 import com.wildsmith.tank.controller.GamepadController;
 import com.wildsmith.tank.levels.Level;
-import com.wildsmith.tank.levels.LevelOne;
+import com.wildsmith.tank.levels.LevelFactory;
 import com.wildsmith.tank.threads.DrawThread;
 import com.wildsmith.tank.utils.TimeHelper;
 
@@ -44,9 +44,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         sound.initSounds(context);
 
         gamepadController = new GamepadController();
-
-        // This should be loaded up dynamically
-        level = new LevelOne(context, sound, gamepadController);
     }
 
     @Override
@@ -159,5 +156,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         return false;
+    }
+
+    public void setLevel(int levelIndex) {
+        this.level = LevelFactory.getLevel(getContext(), sound, gamepadController, levelIndex);
     }
 }
