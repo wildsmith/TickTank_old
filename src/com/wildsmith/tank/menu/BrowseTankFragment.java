@@ -49,7 +49,8 @@ public class BrowseTankFragment extends CoreTankBrowseFragment {
         setHeadersTransitionOnBackEnabled(true);
         setBadgeDrawable(getResources().getDrawable(R.drawable.tank_browser_icon));
         setBrandColor(getResources().getColor(R.color.drawer_color));
-        // setSearchAffordanceColor(getResources().getColor(R.color.search_opaque));
+        setSearchAffordanceColor(getResources().getColor(R.color.search_color));
+        // setHeaderPresenterSelector(headerPresenterSelector);
         setAdapter(getBrowseAdapter());
         setDefaultBackground(getResources().getDrawable(R.drawable.hd_default_background));
     }
@@ -66,7 +67,7 @@ public class BrowseTankFragment extends CoreTankBrowseFragment {
     private ArrayObjectAdapter getBrowseAdapter() {
         ArrayObjectAdapter rowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
 
-        for (int i = 0; i < LevelFactory.getLevelTypeCount(); i++) {
+        for (int i = 0; i < LevelFactory.getMenuItemCount(); i++) {
             ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new BrowseTankPresenter());
 
             final int levelTypeIndex = i + 1;
@@ -81,7 +82,14 @@ public class BrowseTankFragment extends CoreTankBrowseFragment {
                 listRowAdapter.add(tankLevel);
             }
 
-            HeaderItem header = new HeaderItem(i, LevelFactory.getLevelType(getActivity(), levelTypeIndex), null);
+            final String levelType = LevelFactory.getMenuType(getActivity(), levelTypeIndex);
+            final String levelTypeIconUri = LevelFactory.getMenuTypeIcon(getActivity(), levelTypeIndex);
+
+            /**
+             * Setting the icon uri doesn't currently work.
+             * http://stackoverflow.com/questions/25803609/androidtv-headeritem-icon-cant-be-set
+             */
+            HeaderItem header = new HeaderItem(i, levelType, levelTypeIconUri);
             rowsAdapter.add(new ListRow(header, listRowAdapter));
         }
 

@@ -18,6 +18,9 @@ public class BrowseTankPresenter extends CoreTankPresenter {
         if (textView != null) {
             textView.setText(tankLevel.getDescription());
         }
+
+        view.setFocusable(true);
+        view.setFocusableInTouchMode(true);
     }
 
     @Override

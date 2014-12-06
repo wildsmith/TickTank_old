@@ -86,6 +86,12 @@ public class GameActivity extends Activity {
             // this is the case when onResume() is called by the system due to a screen state change
             // to screen off stop the game thread and stop the sound
             GameView gameView = (GameView) findViewById(R.id.gameView);
+            if (event.getKeyCode() == KeyEvent.KEYCODE_BUTTON_B) {
+                gameView.pauseGame();
+                finish();
+                return true;
+            }
+
             return gameView.handleKeyEvent(event);
         }
 
