@@ -42,7 +42,7 @@ public class Tank extends ViewObject {
     private boolean hasBarrelRotated;
 
     public Tank(float left, float right, float top, float bottom, Level level) {
-        super(R.drawable.tank, left, right, top, bottom, level);
+        super(R.drawable.image_tank, left, right, top, bottom, level);
 
         setupTankBarrel(left, right, top, bottom, level);
     }
@@ -57,7 +57,7 @@ public class Tank extends ViewObject {
         barrelBounds = new RectF(barrelLeft, barrelTop, barrelWidth, barrelHeight);
 
         Resources resources = level.getContext().getResources();
-        Bitmap fullImage = BitmapFactory.decodeResource(resources, R.drawable.tank_barrel);
+        Bitmap fullImage = BitmapFactory.decodeResource(resources, R.drawable.image_tank_barrel);
         barrelBitmap = Bitmap.createScaledBitmap(fullImage, (int) barrelWidth, (int) barrelHeight, true);
 
         barrelMatrix = new Matrix();

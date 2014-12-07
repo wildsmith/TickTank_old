@@ -2,11 +2,15 @@
 
     <string name="app_name">Tick Tank</string>
     
-    <string name="level_one_description">Level one</string>
-    <string name="level_two_description">Level two</string>
+    <string name="land_level_one_description"><b>Level One</b>\nTake on the worse half baked game ever. This is the first level and only level where nothing really happens.</string>
+    <string name="land_level_two_description"><b>Level Two</b>\nSame level as the first level. It\'s amazing how much time it takes to make just one level.</string>
     
-    <string name="level_type_one">Battle by Land</string>
-    <string name="level_type_two">Storm by Water</string>
-    <string name="level_settings">Settings</string>
+    <string name="water_level_one_description"><b>Level One</b>\nThere aren\'t actually any water levels, this is the same level as the first level in the land types.</string>
+    <string name="water_level_two_description"><b>Level Two</b>\nNot to repeat myself but this is the same level as the first level in the land types.</string>
+    <string name="water_level_three_description"><b>Level Three</b>\nYou get the point.</string>
+    
+    <string name="menu_land">Battle by Land</string>
+    <string name="menu_water">Storm by Water</string>
+    <string name="menu_settings">Settings</string>
 
 </resources>

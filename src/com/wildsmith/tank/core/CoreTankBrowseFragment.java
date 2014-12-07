@@ -11,20 +11,26 @@ public abstract class CoreTankBrowseFragment extends BrowseFragment implements O
 
     private Drawable defaultBackground;
 
+    private BackgroundManager backgroundManager;
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        BackgroundManager backgroundManager = BackgroundManager.getInstance(getActivity());
+        backgroundManager = BackgroundManager.getInstance(getActivity());
         backgroundManager.attach(getActivity().getWindow());
     }
 
     protected void updateBackground(Drawable drawable) {
-        BackgroundManager.getInstance(getActivity()).setDrawable(drawable);
+        if (drawable != null && backgroundManager != null) {
+            backgroundManager.setDrawable(drawable);
+        }
     }
 
     protected void clearBackground() {
-        BackgroundManager.getInstance(getActivity()).setDrawable(defaultBackground);
+        if (defaultBackground != null && backgroundManager != null) {
+            backgroundManager.setDrawable(defaultBackground);
+        }
     }
 
     public Drawable getDefaultBackground() {
@@ -33,5 +39,9 @@ public abstract class CoreTankBrowseFragment extends BrowseFragment implements O
 
     public void setDefaultBackground(Drawable defaultBackground) {
         this.defaultBackground = defaultBackground;
+    }
+
+    public BackgroundManager getBackgroundManager() {
+        return backgroundManager;
     }
 }

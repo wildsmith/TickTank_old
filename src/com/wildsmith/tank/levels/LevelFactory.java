@@ -1,6 +1,5 @@
 package com.wildsmith.tank.levels;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
@@ -13,8 +12,15 @@ import com.wildsmith.tank.controller.GamepadController;
  */
 public class LevelFactory {
 
-    public static int getLevelCount() {
-        return 2;
+    public static int getLevelCount(LevelType levelType) {
+        switch (levelType) {
+            case LAND:
+                return 2;
+            case WATER:
+                return 3;
+            default:
+                return 0;
+        }
     }
 
     public static Level getLevel(Context context, SoundManager sound, GamepadController gamepadController, int level) {
@@ -24,57 +30,112 @@ public class LevelFactory {
             case 2:
                 return new LevelTwo(context, sound, gamepadController);
             default:
-                return new LevelOne(context, sound, gamepadController);
+                return null;
         }
     }
 
-    public static Drawable getLevelBackground(Context context, int level) {
-        switch (level) {
-            case 1:
-                return context.getDrawable(R.drawable.hd_default_background);
-            case 2:
-                return context.getDrawable(R.drawable.hd_level_two);
-            default:
-                return context.getDrawable(R.drawable.hd_default_background);
-        }
-    }
-
-    public static String getDescription(Context context, int level) {
-        switch (level) {
-            case 1:
-                return context.getString(R.string.level_one_description);
-            case 2:
-                return context.getString(R.string.level_two_description);
-            default:
-                return context.getString(R.string.level_one_description);
-        }
-    }
-
-    public static int getMenuItemCount() {
-        return 3;
-    }
-
-    public static String getMenuType(Context context, int levelType) {
+    public static Drawable getLevelBackground(Context context, LevelType levelType, int level) {
         switch (levelType) {
-            case 1:
-                return context.getString(R.string.level_type_one);
-            case 2:
-                return context.getString(R.string.level_type_two);
+            case LAND:
+                return getLandLevelBackground(context, level);
+            case WATER:
+                return getWaterLevelBackground(context, level);
             default:
-                return context.getString(R.string.level_settings);
+                return null;
         }
     }
 
-    public static String getMenuTypeIcon(Activity activity, int levelTypeIndex) {
-        final String packageName = activity.getApplicationContext().getPackageName();
-
-        switch (levelTypeIndex) {
+    private static Drawable getWaterLevelBackground(Context context, int level) {
+        switch (level) {
             case 1:
-                return "android.resource://" + packageName + "/" + R.drawable.land_icon;
+                return context.getDrawable(R.drawable.water_type_one_background);
             case 2:
-                return "android.resource://" + packageName + "/" + R.drawable.water_icon;
+                return context.getDrawable(R.drawable.water_type_two_background);
+            case 3:
+                return context.getDrawable(R.drawable.water_type_three_background);
             default:
-                return "android.resource://" + packageName + "/" + R.drawable.settings_icon;
+                return null;
+        }
+    }
+
+    private static Drawable getLandLevelBackground(Context context, int level) {
+        switch (level) {
+            case 1:
+                return context.getDrawable(R.drawable.land_type_one_background);
+            case 2:
+                return context.getDrawable(R.drawable.land_type_two_background);
+            default:
+                return null;
+        }
+    }
+
+    public static Drawable getLevelLargeBackground(Context context, LevelType levelType, int level) {
+        switch (levelType) {
+            case LAND:
+                return getLandLevelLargeBackground(context, level);
+            case WATER:
+                return getWaterLevelLargeBackground(context, level);
+            default:
+                return null;
+        }
+    }
+
+    private static Drawable getWaterLevelLargeBackground(Context context, int level) {
+        switch (level) {
+            case 1:
+                return context.getDrawable(R.drawable.hd_water_type_one_background);
+            case 2:
+                return context.getDrawable(R.drawable.hd_water_type_two_background);
+            case 3:
+                return context.getDrawable(R.drawable.hd_water_type_three_background);
+            default:
+                return null;
+        }
+    }
+
+    private static Drawable getLandLevelLargeBackground(Context context, int level) {
+        switch (level) {
+            case 1:
+                return context.getDrawable(R.drawable.hd_land_type_one_background);
+            case 2:
+                return context.getDrawable(R.drawable.hd_land_type_two_background);
+            default:
+                return null;
+        }
+    }
+
+    public static String getDescription(Context context, LevelType levelType, int level) {
+        switch (levelType) {
+            case LAND:
+                return getLandLevelDescription(context, level);
+            case WATER:
+                return getWaterLevelDescription(context, level);
+            default:
+                return null;
+        }
+    }
+
+    private static String getLandLevelDescription(Context context, int level) {
+        switch (level) {
+            case 1:
+                return context.getString(R.string.land_level_one_description);
+            case 2:
+                return context.getString(R.string.land_level_two_description);
+            default:
+                return null;
+        }
+    }
+
+    private static String getWaterLevelDescription(Context context, int level) {
+        switch (level) {
+            case 1:
+                return context.getString(R.string.water_level_one_description);
+            case 2:
+                return context.getString(R.string.water_level_two_description);
+            case 3:
+                return context.getString(R.string.water_level_three_description);
+            default:
+                return null;
         }
     }
 }

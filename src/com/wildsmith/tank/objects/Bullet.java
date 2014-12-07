@@ -12,7 +12,7 @@ public class Bullet extends ViewObject {
     private float velocityY;
 
     public Bullet(float left, float right, float top, float bottom, Level level) {
-        super(R.drawable.bullet, left, right, top, bottom, level);
+        super(R.drawable.image_bullet, left, right, top, bottom, level);
 
         velocityY = BULLET_VELOCITY;
     }

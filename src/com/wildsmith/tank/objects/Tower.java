@@ -8,7 +8,7 @@ import com.wildsmith.tank.levels.Level;
 public class Tower extends ViewObject {
 
     public Tower(float left, float right, float top, float bottom, Level level) {
-        super(R.drawable.tower, left, right, top, bottom, level);
+        super(R.drawable.image_tower, left, right, top, bottom, level);
     }
 
     @Override

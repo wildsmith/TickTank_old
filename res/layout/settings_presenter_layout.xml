@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v17.leanback.widget.ImageCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/settings_image_card_view"
+    android:layout_width="@dimen/circular_button_size"
+    android:layout_height="@dimen/circular_button_size" />

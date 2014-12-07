@@ -1,0 +1,5 @@
+<resources>
+
+    <dimen name="circular_button_size">90dp</dimen>
+
+</resources>

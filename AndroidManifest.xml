@@ -22,7 +22,7 @@
         android:label="@string/app_name"
         android:theme="@style/TickTankTheme" >
         <activity
-            android:name=".menu.BrowseTankActivity"
+            android:name=".menu.TickTankMenuActivity"
             android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
