@@ -1,6 +1,5 @@
 package com.wildsmith.tank.utils;
 
-import android.graphics.RectF;
 
 public class ScreenHelper {
 
@@ -30,20 +29,5 @@ public class ScreenHelper {
 
     public static boolean isOffScreenRight(float position, float size, int screenWidth) {
         return position > screenWidth + size;
-    }
-
-    /**
-     * Check should be used to find out if this object has been hit or will hit another object.
-     * Logic for handling that interaction should be done here. NO drawing should occur in this
-     * method.
-     * 
-     * @param object
-     */
-    public static boolean isIntersecting(RectF boundsOne, RectF boundsTwo) {
-        if (boundsOne == null || boundsTwo == null) {
-            return false;
-        }
-
-        return boundsOne.intersect(boundsTwo);
     }
 }

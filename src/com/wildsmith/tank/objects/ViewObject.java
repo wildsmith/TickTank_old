@@ -53,6 +53,10 @@ public abstract class ViewObject {
         this.canvasHeight = resources.getDisplayMetrics().heightPixels;
     }
 
+    public RectF getBounds() {
+        return bounds;
+    }
+
     public float getRight() {
         return bounds.right;
     }

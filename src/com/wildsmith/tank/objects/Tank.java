@@ -1,7 +1,6 @@
 package com.wildsmith.tank.objects;
 
 import java.util.Calendar;
-import java.util.List;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -14,6 +13,7 @@ import com.wildsmith.tank.R;
 import com.wildsmith.tank.attributes.Sound;
 import com.wildsmith.tank.controller.GamepadConstants;
 import com.wildsmith.tank.levels.Level;
+import com.wildsmith.tank.utils.IntersectionHelper;
 import com.wildsmith.tank.utils.MathHelpter;
 import com.wildsmith.tank.utils.ScreenHelper;
 
@@ -219,13 +219,10 @@ public class Tank extends ViewObject {
     protected void setPosition(float left, float top) {
         RectF newBounds = new RectF(left, top, left + width, top + height);
 
-        // TODO this works but if we intersect with bullets we need to make sure that they dissolve
-        // and we loose health
-        // boolean isIntersectingWithBullets = isIntersectingWithBullets(newBounds);
+        final boolean isIntersectingWithTower = IntersectionHelper.isIntersectingWithViewObject(level.getTower(), newBounds);
+        final boolean isIntersectingWithWalls = IntersectionHelper.isIntersectingWithViewObjects(level.getWalls(), newBounds);
 
-        boolean isIntersectingWithWalls = isIntersectingWithWalls(newBounds);
-
-        if (/* isIntersectingWithBullets || */isIntersectingWithWalls) {
+        if (isIntersectingWithWalls || isIntersectingWithTower) {
             setVelocity(0.0f, 0.0f);
             return;
         }
@@ -254,41 +251,5 @@ public class Tank extends ViewObject {
 
     public void setVelocityY(float velocity) {
         velocityY = velocity * VELOCITY_MULTIPLIER;
-    }
-
-    private boolean isIntersectingWithBullets(RectF newBounds) {
-        boolean isIntersecting = false;
-        List<Bullet> bullets = level.getBullets();
-        if (bullets == null || bullets.isEmpty()) {
-            return isIntersecting;
-        }
-
-        for (Bullet bullet : bullets) {
-            if (isIntersecting) {
-                break;
-            }
-
-            isIntersecting = ScreenHelper.isIntersecting(newBounds, bullet.bounds);
-        }
-
-        return isIntersecting;
-    }
-
-    private boolean isIntersectingWithWalls(RectF newBounds) {
-        boolean isIntersecting = false;
-        List<Wall> walls = level.getWalls();
-        if (walls == null || walls.isEmpty()) {
-            return isIntersecting;
-        }
-
-        for (Wall wall : walls) {
-            if (isIntersecting) {
-                break;
-            }
-
-            isIntersecting = ScreenHelper.isIntersecting(newBounds, wall.bounds);
-        }
-
-        return isIntersecting;
     }
 }
