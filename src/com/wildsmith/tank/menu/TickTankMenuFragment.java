@@ -14,13 +14,16 @@ import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
+import android.view.View;
 
 import com.wildsmith.tank.R;
+import com.wildsmith.tank.about.AboutDetailsActivity;
 import com.wildsmith.tank.core.CoreTankBackgroundTask;
 import com.wildsmith.tank.core.CoreTankBrowseFragment;
 import com.wildsmith.tank.game.GameActivity;
 import com.wildsmith.tank.levels.LevelFactory;
 import com.wildsmith.tank.levels.LevelType;
+import com.wildsmith.tank.search.TankLevelSearchActivity;
 
 public class TickTankMenuFragment extends CoreTankBrowseFragment {
 
@@ -66,6 +69,14 @@ public class TickTankMenuFragment extends CoreTankBrowseFragment {
     private void setupEventListeners() {
         setOnItemViewSelectedListener(this);
         setOnItemViewClickedListener(this);
+        setOnSearchClickedListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), TankLevelSearchActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private ArrayObjectAdapter getBrowseAdapter() {
@@ -78,7 +89,7 @@ public class TickTankMenuFragment extends CoreTankBrowseFragment {
         return rowsAdapter;
     }
 
-    private ListRow generateLandLevelRow() {
+    private Row generateLandLevelRow() {
         ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new TankLevelPresenter());
 
         for (int x = 0; x < LevelFactory.getLevelCount(LevelType.LAND); x++) {
@@ -101,7 +112,7 @@ public class TickTankMenuFragment extends CoreTankBrowseFragment {
         return new ListRow(header, listRowAdapter);
     }
 
-    private ListRow generateWaterLevelRow() {
+    private Row generateWaterLevelRow() {
         ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new TankLevelPresenter());
 
         for (int x = 0; x < LevelFactory.getLevelCount(LevelType.WATER); x++) {
@@ -124,12 +135,8 @@ public class TickTankMenuFragment extends CoreTankBrowseFragment {
         return new ListRow(header, listRowAdapter);
     }
 
-    private Object generateSettingRow() {
+    private Row generateSettingRow() {
         ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new SettingsPresenter());
-
-        SettingsItem volumeSetting = new SettingsItem();
-        volumeSetting.setBackground(getResources().getDrawable(R.drawable.volume_setting_background));
-        listRowAdapter.add(volumeSetting);
 
         SettingsItem aboutSetting = new SettingsItem();
         aboutSetting.setBackground(getResources().getDrawable(R.drawable.about_setting_background));
@@ -167,6 +174,8 @@ public class TickTankMenuFragment extends CoreTankBrowseFragment {
             final int levelIndex = ((TankLevelItem) item).getLevelIndex();
             Drawable background = LevelFactory.getLevelLargeBackground(getActivity(), levelType, levelIndex);
             startBackgroundTimer(background);
+        } else if (item instanceof SettingsItem) {
+            startBackgroundTimer(getDefaultBackground());
         }
     }
 
@@ -185,7 +194,8 @@ public class TickTankMenuFragment extends CoreTankBrowseFragment {
             intent.putExtra(GameActivity.LEVEL_EXTRA, ((TankLevelItem) item).getLevelIndex());
             getActivity().startActivity(intent);
         } else if (item instanceof SettingsItem) {
-            // TODO go to the details page
+            Intent intent = new Intent(getActivity(), AboutDetailsActivity.class);
+            getActivity().startActivity(intent);
         }
     }
 

@@ -1,5 +1,5 @@
 <resources>
 
-    <style name="TickTankTheme" parent="@style/Theme.Leanback"></style>
+    <style name="TickTankTheme" parent="@style/Theme.Leanback" />
 
 </resources>

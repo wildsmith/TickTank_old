@@ -1,7 +1,8 @@
 <resources>
 
     <color name="browse_tank_text_view_background">#CC808080</color>
-    <color name="search_color">#FF8C00</color>
+    <color name="search_color">#696969</color>
     <color name="drawer_color">#228B22</color>
+    <color name="about_background">#305391</color>
 
 </resources>

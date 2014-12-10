@@ -12,5 +12,14 @@
     <string name="menu_land">Battle by Land</string>
     <string name="menu_water">Storm by Water</string>
     <string name="menu_settings">Settings</string>
+    
+    <string name="about_me_title">Thomas Belk</string>
+    <string name="about_me_subtitle">Senior Android Developer</string>
+    <string name="about_me_body">Since graduating from the University of Delaware I\'ve come to make Android my profession. The amount of progress the open source community has made to further its teachings, accessibility and development has been quintessential in my journey.</string>
+    
+    <string name="about_gdg_title">Wilmington GDG</string>
+    <string name="about_gdg_subtitle">Android TV</string>
+    <string name="about_gdg_body">On December 12th we discussed Android TV app programming with a focus on game development. If you would like to or contribute back to the Wilmington GDG feel free to let any of its organizers know. Below are two options to Join, or&#8230;Join; there\'s only one option.</string>
+    <string name="about_gdg_action_one">Join</string>
 
 </resources>
