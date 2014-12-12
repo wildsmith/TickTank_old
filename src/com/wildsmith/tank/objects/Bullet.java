@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.RectF;
 
 import com.wildsmith.tank.R;
+import com.wildsmith.tank.attributes.Sound;
 import com.wildsmith.tank.levels.Level;
 import com.wildsmith.tank.utils.IntersectionHelper;
 import com.wildsmith.tank.utils.MovementTracker;
@@ -48,6 +49,7 @@ public class Bullet extends ViewObject {
         final boolean isIntersectingWithWalls = IntersectionHelper.isIntersectingWithViewObjects(level.getWalls(), newBounds);
         if (isIntersectingWithTower || isIntersectingWithWalls) {
             movementTracker.flipMovement();
+            sound.playSound(Sound.BUTTET_BOUNCE);
         }
 
         float top = getTop();

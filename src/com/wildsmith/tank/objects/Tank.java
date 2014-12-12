@@ -73,12 +73,15 @@ public class Tank extends ViewObject {
     }
 
     private void updateBarrel(float frameDelta) {
-        if (gamepadController.isButtonDown(GamepadConstants.BUTTON_R2) && canFireNewBullet()) {
+        if (gamepadController.isTriggerDown(GamepadConstants.TRIGGER_R2) && canFireNewBullet()) {
             sound.playSound(Sound.TANK_FIRE);
             createBullet();
         }
 
         return;
+
+        // TODO this chunk of code was my attempt to map out the tank barrel rotation to the right
+        // joy stick rotation. I didn't quite get it done before the presentation.
 
         // float newAimX = gamepadController.getJoystickPosition(GamepadConstants.JOYSTICK_2,
         // GamepadConstants.AXIS_X);
@@ -142,7 +145,7 @@ public class Tank extends ViewObject {
     }
 
     private void updateTank(float frameDelta) {
-        if (gamepadController.isButtonDown(GamepadConstants.BUTTON_L2)) {
+        if (gamepadController.isTriggerDown(GamepadConstants.TRIGGER_L2)) {
             setVelocity(0.0f, 0.0f);
             sound.pauseSound(Sound.TANK_MOVEMENT);
             return;

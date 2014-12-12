@@ -21,6 +21,8 @@ public class SoundManager implements OnCompletionListener {
 
     private MediaPlayer finalCountDown;
 
+    private MediaPlayer bulletBounce;
+
     private Context context;
 
     public void initSounds(Context context) {
@@ -37,6 +39,9 @@ public class SoundManager implements OnCompletionListener {
 
         finalCountDown = new MediaPlayer();
         prepareMediaPlayer(context, Sound.FINAL_COUNT_DOWN, finalCountDown, true);
+
+        bulletBounce = new MediaPlayer();
+        prepareMediaPlayer(context, Sound.BUTTET_BOUNCE, bulletBounce, false);
     }
 
     private void prepareMediaPlayer(Context context, int resourceId, MediaPlayer mp, boolean isLooping) {
@@ -208,6 +213,9 @@ public class SoundManager implements OnCompletionListener {
         } else if (mp == finalCountDown) {
             prepareMediaPlayer(context, Sound.FINAL_COUNT_DOWN, finalCountDown, true);
             mediaPlayerPlayingMap.put(Sound.FINAL_COUNT_DOWN, false);
+        } else if (mp == bulletBounce) {
+            prepareMediaPlayer(context, Sound.BUTTET_BOUNCE, bulletBounce, false);
+            mediaPlayerPlayingMap.put(Sound.BUTTET_BOUNCE, false);
         }
     }
 }
